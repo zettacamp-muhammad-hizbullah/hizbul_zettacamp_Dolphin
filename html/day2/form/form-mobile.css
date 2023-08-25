@@ -1,0 +1,12 @@
+@media screen and (max-width: 520px) {
+  main {
+    flex-direction: column;
+    grid-template-columns: auto;
+  }
+  .form_input{
+    flex-direction: column;
+  }
+  .image {
+    max-width: 50vw;
+  }
+}

@@ -1,0 +1,115 @@
+:root {
+  font-family: 'Courier New', Courier, monospace;
+  accent-color: #ad5dee;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+main {
+  max-width: 720px;
+  margin: 2rem auto;
+  width: 100%;
+  padding: 0.25rem;
+}
+table {
+  background-color: antiquewhite;
+  border: 5px solid antiquewhite;
+  border-radius: 10px;
+  width: 100%;
+  overflow: auto;
+  border-spacing: 1rem;
+
+  box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -webkit-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -moz-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+}
+table > caption {
+  font-size: large;
+  padding: 1rem;
+  border: 4px solid rgb(123, 122, 122);
+  color: #ad5dee;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: left;
+
+  box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -webkit-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -moz-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+}
+.shopping_list_row {
+  padding: 1rem 0;
+}
+.card_item {
+  border: 4px solid #ad5dee;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -webkit-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+  -moz-box-shadow: -10px 10px 0px 0px rgba(91, 85, 85, 0.57);
+}
+.card_image {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+  object-fit: cover;
+}
+.card_body {
+  padding: 1rem;
+}
+.title_item {
+  font-size: larger;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+.card_price_amount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.price_item {
+  font-size: large;
+}
+
+.card_variety_wrap {
+  padding: 10px;
+  background-color: #e3cdf5;
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+.card_variety_title {
+  font-weight: bold;
+  font-style: italic;
+}
+.card_variety_list {
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+}
+.card_total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.total_price {
+  font-size: 20px;
+  font-weight: bold;
+}
+.button_checkout {
+  width: 100%;
+  border: 3px solid rgb(89, 8, 133);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #ad5dee;
+  color: white;
+  font-size: large;
+  margin-top: 1rem;
+}

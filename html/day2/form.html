@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+    <link href="./form/form.css" rel="stylesheet" />
+    <link href="./form/form-mobile.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <main>
+      <div class="image_wrap">
+        <img class="image" src="./assets/svg/undraw_resume_re_hkth.svg" alt="introduction form" loading="lazy" />
+      </div>
+      <form class="form_input">
+        <div class="form_section">
+          <input type="text" name="firstName" id="firstName" class="input" placeholder="First name" />
+          <input type="text" name="lastName" id="lastName" class="input" placeholder="Last name" />
+          <input type="email" name="email" id="email" class="input" placeholder="your@email.here" />
+          <input type="tel" name="phone" id="phone" class="input" placeholder="+62 your phone number" />
+          <input type="number" name="age" id="age" class="input" placeholder="Your age" />
+          <input type="url" name="webUrl" id="webUrl" class="input" placeholder="Your url website or socmed" />
+        </div>
+        <div class="form_section">
+          <textarea class="bio_input" id="biography" aria-colspan="text_area_input" placeholder="Biography" rows="3"></textarea>
+          <div>
+            <div>Gender:</div>
+            <div class="input_radio_item">
+              <input type="radio" name="gender" id="male" value="male" />
+              <label for="male">Male</label>
+            </div>
+            <div class="input_radio_item">
+              <input type="radio" name="gender" id="female" value="female" />
+              <label for="female">Female</label>
+            </div>
+          </div>
+          <select class="input" name="role">
+            <option disabled selected>Your role</option>
+            <option value="be">Back End</option>
+            <option value="fe">Front End</option>
+            <option value="qa">Quality Assurance</option>
+          </select>
+          <div>
+            <label for="image" class="label_input">🖼️ Profile picture</label>
+            <input type="file" name="image" id="image" accept="image/*" class="input" />
+          </div>
+
+          <button class="button_submit" type="submit">Submit</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

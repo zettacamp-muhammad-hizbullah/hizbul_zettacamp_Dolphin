@@ -1,0 +1,38 @@
+@media screen and (max-width: 520px) {
+  header {
+    flex-direction: column;
+  }
+
+  .greeting {
+    text-align: center;
+    flex-direction: column;
+  }
+  .job_title {
+    text-align: center;
+  }
+  .image_profile {
+    margin: 0 auto;
+    aspect-ratio: 1/1;
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+  .main_section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .social_media_list {
+    grid-template-columns: auto;
+  }
+  .youtube_section,
+  .coffee_section {
+    flex-direction: column;
+  }
+  .saweria_section {
+    flex-direction: column-reverse;
+  }
+  .video_section {
+    flex-direction: column;
+  }
+}
