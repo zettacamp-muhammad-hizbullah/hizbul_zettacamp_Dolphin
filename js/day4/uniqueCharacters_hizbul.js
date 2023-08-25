@@ -9,6 +9,30 @@ console.log(hasUniqueCharacters("abcdefg")); // Output: true
 console.log(hasUniqueCharacters("hello")); // Output: false
 */
 
+// function hasUniqueCharacters(str) {
+//   // Your logic here
+//   const duplicateChars = [];
+//   str = str.toLowerCase();
+
+//   if (!/^[a-zA-Z]+$/.test(str)) {
+//     return 'must alphabet contains';
+//   }
+
+//   loop1: for (let i = 0; i < str.length; i++) {
+//     const currentChar = str[i];
+//     for (let j = i + 1; j < str.length; j++) {
+//       console.log('i => ', currentChar, '| j => ', str[j]);
+//       if (currentChar === str[j]) {
+//         console.error('duplicate char', currentChar);
+//         duplicateChars.push(currentChar);
+//         break loop1;
+//       }
+//     }
+//   }
+
+//   return duplicateChars.length > 0 ? false : true;
+// }
+
 function hasUniqueCharacters(str) {
   // Your logic here
   const duplicateChars = [];
@@ -18,19 +42,19 @@ function hasUniqueCharacters(str) {
     return 'must alphabet contains';
   }
 
-  loop1: for (let i = 0; i < str.length; i++) {
-    const currentChar = str[i];
-    for (let j = i + 1; j < str.length; j++) {
-      console.log('i => ', currentChar, '| j => ', str[j]);
-      if (currentChar === str[j]) {
-        console.error('duplicate char', currentChar);
-        duplicateChars.push(currentChar);
-        break loop1;
-      }
-    }
-  }
-
-  return duplicateChars.length > 0 ? false : true;
+  let strArray = str.split('');
+  let result = strArray.some((value, index, arr) => {
+    console.log('cek index => ', index);
+    console.log('string yang dicek => ', value);
+    console.log('index dari value yang dicari => ', arr.lastIndexOf(value));
+    console.log('cek => ', arr.lastIndexOf(value) !== index);
+    return arr.lastIndexOf(value) !== index;
+  });
+  console.log('hasil => ', result);
+  // jika string "aku"
+  // a cari index, index of a = 0, apakah 0 tidak sama index saat ini yaitu = 0, ternyata sama, maka
+  // console.log(result);
+  return !result;
 }
 
 console.log(hasUniqueCharacters('abcdefg')); // Output: true
