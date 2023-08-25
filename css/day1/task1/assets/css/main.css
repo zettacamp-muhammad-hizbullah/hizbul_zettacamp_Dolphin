@@ -1,0 +1,27 @@
+:root {
+    font-family: 'Courier New', Courier, monospace;
+}
+body {
+  background-color: antiquewhite;
+  margin: 0;
+}
+main {
+  padding: 5rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+span {
+  color: white;
+  padding: 1px 12px;
+  border-radius: 10px;
+  background-color: blueviolet;
+}
+.first_span {
+  font-size: 20px;
+}
+/* p > span:nth-of-type(1) {
+  font-size: 20px;
+} */
+/* p > span:nth-child(1) {
+  font-size: 20px;
+} */

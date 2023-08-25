@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Hero - Inline CSS</title>
+  </head>
+  <body style="background-color: rgb(46, 40, 40); margin: 0; height: 100vh; display: flex;">
+    <main
+      style="
+        max-width: 860px;
+        margin: 0 auto;
+        display: flex;
+        gap: 3rem;
+        padding: 2rem;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div style="display: flex; gap: 3rem">
+        <section>
+          <img
+            loading="lazy"
+            alt="spider-man"
+            src="https://www.superherodb.com/pictures2/portraits/10/100/133.jpg"
+            style="max-width: 200px; border-radius: 10px; border: 4px dashed red; outline: 10px solid red;"
+          />
+        </section>
+        <section style="display: flex; flex-direction: column; gap: 2rem">
+          <h1 style="font-size: 3rem; color: red; margin: 0">Spider Man</h1>
+          <div style="color: white">Debut Date: August 1962</div>
+          <div style="color: green">
+            <h2 style="margin-top: 0; text-decoration: underline">Super Power:</h2>
+            <ul style="list-style: '🕷️'; columns: 2; -webkit-columns: 2; -moz-columns: 2">
+              <li>Spider Physiology</li>
+              <li>Wall Crawling</li>
+              <li>Superhuman Strength</li>
+              <li>Superhuman Speed</li>
+              <li>Superhuman Stamina</li>
+              <li>Superhuman Reflexes</li>
+              <li>Regenerative Healing Factor</li>
+              <li>Spider-Sense</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

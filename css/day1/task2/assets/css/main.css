@@ -1,0 +1,44 @@
+* {
+  color: white;
+  font-style: normal;
+  font-family: 'Courier New', Courier, monospace;
+}
+body {
+  background-color: rgb(59, 59, 58);
+  margin: 0;
+}
+main {
+  padding: 5rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.cards_section {
+  background-color: aliceblue;
+  border-radius: 10px;
+}
+.card_list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+.card {
+  background-color: rgb(209, 196, 179);
+  padding: 1rem;
+  margin: 5px;
+  border: .2rem ridge rgb(225, 191, 150);
+  border-radius: 10px;
+}
+.card_image {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+.card_title {
+  color: black;
+  font-family: initial;
+}
+.card_description {
+  color: rgb(45, 44, 44);
+  font-family: initial;
+}
+

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hobby - Movie - Song</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        background-color: rgb(202, 182, 182);
+        color: white;
+      }
+      main {
+        padding: 5rem;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .table_section {
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
+      }
+      table {
+        border-radius: 10px;
+        background-color: rgb(33, 33, 33);
+        border: 1rem solid white;
+        padding: 1rem;
+        border-spacing: 0.2rem 0.2rem;
+
+        box-shadow: 0px 10px 20px 0px rgba(91, 85, 85, 0.27);
+        -webkit-box-shadow: 0px 10px 20px 0px rgba(91, 85, 85, 0.27);
+        -moz-box-shadow: 0px 10px 20px 0px rgba(91, 85, 85, 0.27);
+      }
+      table td,
+      table th {
+        padding: 10px;
+      }
+      .table_hobbies > tbody > tr:nth-of-type(2n) {
+        background-color: green;
+      }
+      .table_movies > tbody > tr:nth-of-type(2) {
+        background-color: red;
+      }
+      .hobby_image,
+      .movie_image {
+        display: flex;
+        width: 200px;
+        border-radius: 10px;
+        margin: 0 auto;
+      }
+      .table_song > tbody > tr:nth-of-type(3) {
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="table_section">
+        <table class="table_hobbies">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Name</th>
+              <th>Image</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Swimming</td>
+              <td>
+                <img
+                  src="https://images.unsplash.com/photo-1438029071396-1e831a7fa6d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1450&q=80"
+                  alt="Swimming"
+                  loading="lazy"
+                  class="hobby_image"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Camping</td>
+              <td>
+                <img
+                  src="https://images.unsplash.com/photo-1537565266759-34bbc16be345?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njl8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=600&q=60"
+                  alt="Camping"
+                  loading="lazy"
+                  class="hobby_image"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Hiking</td>
+              <td>
+                <img
+                  src="https://images.unsplash.com/photo-1587221703223-181d78a8fc4c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1173&q=80"
+                  alt="Hiking"
+                  loading="lazy"
+                  class="hobby_image"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table_movies">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Name</th>
+              <th>Image</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>The Witcher</td>
+              <td>
+                <img
+                  src="https://bacaterus.com/wp-content/uploads/2021/04/The-Witcher-Season-1_.webp"
+                  alt="The Witcher"
+                  loading="lazy"
+                  class="movie_image"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Arrow</td>
+              <td>
+                <img
+                  src="https://i.pinimg.com/236x/5d/8c/bb/5d8cbb58aa522e342df46a058ff47bb7--arrow-cw-the-arrow.jpg"
+                  alt="Arrow"
+                  loading="lazy"
+                  class="movie_image"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Captain America</td>
+              <td>
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg"
+                  alt="Captain America"
+                  loading="lazy"
+                  class="movie_image"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table_song">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Title</th>
+              <th>Artist</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Pick up the phon</td>
+              <td>Henry Moodie</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Fictional</td>
+              <td>Khloe Rose</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Jiwa Yang Bersedih</td>
+              <td>Ghea Indrawari</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>
