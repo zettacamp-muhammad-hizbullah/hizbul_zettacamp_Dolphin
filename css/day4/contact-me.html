@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Final Task | Contact</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/svg/icon.svg" />
+    <link href="./assets/css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header class="bg-primary text-white p-1 sticky top-0 box-border z-10">
+      <nav class="max-w-lg mx-auto flex items-center justify-between gap-1 wrap">
+        <div>
+          <a href="./index.html">
+            <img loading="lazy" alt="logo" src="./assets/svg/logo.svg" style="width: 100px" />
+          </a>
+        </div>
+        <ul class="flex gap-1 list-none p-0 wrap">
+          <li>
+            <a style="color: white; font-weight: bold" href="./index.html" class="underline-none">Home</a>
+          </li>
+          <li>
+            <a style="color: white; font-weight: bold" href="./shopping-list.html" class="underline-none">Shopping List</a>
+          </li>
+          <li>
+            <a style="color: white; font-weight: bold" href="./about-me.html" class="underline-none">About</a>
+          </li>
+          <li>
+            <a style="color: white; font-weight: bold" href="./contact-me.html" class="underline-none">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="flex-grow py-1">
+      <section class="web_desc flex flex-col items-center gap-1 max-w-lg mx-auto">
+        <div>
+          <img
+            alt="image"
+            loading="lazy"
+            src="https://images.squarespace-cdn.com/content/v1/57f0290fd1758e2d78da8496/1611082184409-U66B3OW50E6A1TJ3BPQ4/HULU_NewYears_SH011_02.png?format=1500w"
+            style="width: 100%"
+          />
+        </div>
+        <div class="p-1 max-w-lg mx-auto text-primary text-center" style="font-size: 1.75rem; font-weight: bold">
+          Feel free to send meesage, criticsm, and suggestion to me!
+        </div>
+      </section>
+
+      <section class="max-w-lg mx-auto text-center" style="padding: 50px 0">
+        <div class="flex items-center justify-center w-full">
+          <form method="get" action="./add-item.html" class="product_form shadow rounded-lg p-1" style="width: 50%;">
+            <div class="form_field">
+              <label for="name">Name</label>
+              <input required class="input" type="text" placeholder="Your Name" name="name" id="name" />
+            </div>
+            <div class="form_field">
+              <label for="email">Email</label>
+              <input required class="input" type="email" placeholder="Your Email" name="email" id="email" />
+            </div>
+            <div class="form_field">
+              <label for="message">Message</label>
+              <textarea required class="input" rows="10" name="message" id="message" placeholder="Your message"></textarea>
+            </div>
+            <div>
+              <button
+                type="submit"
+                class="button_add_item bg-primary text-white w-full"
+                style="font-family: inherit; font-size: larger; border: none; font-weight: bold; padding: 0.5rem 1rem; cursor: pointer"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate text-white text-center py-1">
+      <div class="mx-auto grid grid-cols-3 gap-1 max-w-lg" style="padding-top: 3rem; padding-bottom: 3rem">
+        <div class="w-full">
+          <div class="text-left">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d856.3173601510501!2d110.41603328589612!3d-7.7825324198325045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59f0134f35ff%3A0xdf22edf25cb96a6f!2sProdi%20Teknik%20Informatika%20UPN%20%22Veteran%22%20Yogyakarta!5e0!3m2!1sid!2sid!4v1691720291895!5m2!1sid!2sid"
+              width="300"
+              height="200"
+              style="border: 0; border-radius: 10px"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+        <div class="w-full">
+          <div class="text-left flex flex-col gap-1">
+            <div class="text-white underline-none" style="font-weight: bold; font-size: 1.5rem">Navigation</div>
+            <a href="./shopping-list.html" class="text-white underline-none">Shopping List</a>
+            <a href="./shopping-list.html" class="text-white underline-none">About</a>
+            <a href="./contact-me.html" class="text-white underline-none">Contact</a>
+          </div>
+        </div>
+        <div class="w-full">
+          <div class="text-left flex flex-col gap-1">
+            <a href="./index.html">
+              <img loading="lazy" alt="logo" src="./assets/svg/logo.svg" style="width: 100px" />
+            </a>
+            <div>
+              <img loading="lazy" alt="logo" src="https://cdn.pnghd.pics/data/604/google-play-store-png-57.png" style="width: 200px" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-lg mx-auto flex items-center justify-center">
+        <ul class="flex items-center gap-1 p-0">
+          <li class="social_media_list_item">
+            <a target="_blank" title="linkedin" href="//linkedin.com/company/hulu" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/linkedin/ffffff" alt="linkedin" class="social_media_icon" />
+            </a>
+          </li>
+          <li class="social_media_list_item">
+            <a target="_blank" title="email" href="mailto:hulu.media.relations@disney.com" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/maildotru/ffffff" alt="email" class="social_media_icon" />
+            </a>
+          </li>
+          <li class="social_media_list_item">
+            <a target="_blank" title="instagram" href="//instagram.com/hulu" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/instagram/ffffff" alt="instagram" class="social_media_icon" />
+            </a>
+          </li>
+          <li class="social_media_list_item">
+            <a target="_blank" title="facebook" href="//facebook.com/hulu" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/facebook/ffffff" alt="facebook" class="social_media_icon" />
+            </a>
+          </li>
+          <li class="social_media_list_item">
+            <a target="_blank" title="twitter" href="//twitter.com/hulu" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/twitter/ffffff" alt="twitter" class="social_media_icon" />
+            </a>
+          </li>
+          <li class="social_media_list_item">
+            <a target="_blank" title="youtube" href="//youtube.com/channel/UCE5mQnNl8Q4H2qcv4ikaXeA" class="social_media">
+              <img loading="lazy" src="https://cdn.simpleicons.org/youtube/ffffff" alt="youtube" class="social_media_icon" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>&copy;2023 Hulu Indonesia</div>
+    </footer>
+  </body>
+</html>
