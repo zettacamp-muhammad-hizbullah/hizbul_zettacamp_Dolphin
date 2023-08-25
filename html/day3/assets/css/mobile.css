@@ -1,0 +1,11 @@
+@media screen and (max-width: 520px) {
+  .album_image_artist_wrap {
+    flex-direction: column;
+  }
+  .creation_list {
+    grid-template-columns: auto auto;
+  }
+  .service_section {
+    flex-direction: column;
+  }
+}

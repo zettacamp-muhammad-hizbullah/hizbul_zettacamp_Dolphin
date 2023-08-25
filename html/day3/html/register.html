@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link href="../assets/css/main.css" rel="stylesheet" />
+    <link href="../assets/css/mobile.css" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="register_section">
+        <form method="get" action="./profile.html" class="register_form">
+          <div class="register_field">
+            <label for="email">Email</label>
+            <input required class="input" type="email" placeholder="Your email address" name="email" id="email" />
+          </div>
+          <div class="register_field">
+            <label for="name">Name</label>
+            <input required class="input" type="text" placeholder="Your Fullname" name="name" id="name" />
+          </div>
+          <div class="register_field">
+            <label for="phone">Phone</label>
+            <input required class="input" type="tel" placeholder="Your phone number" name="phone" id="phone" />
+          </div>
+          <div class="register_field">
+            <label>Account Type</label>
+            <div>
+              <input type="radio" name="accountType" id="free" value="free" />
+              <label for="free">Free</label>
+              <input type="radio" name="accountType" id="personal" value="personal" />
+              <label for="personal">Personal</label>
+            </div>
+          </div>
+          <button type="submit" class="register_button">Submit</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
