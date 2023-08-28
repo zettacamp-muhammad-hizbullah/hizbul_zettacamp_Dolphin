@@ -2,15 +2,17 @@ const bookPurchasing = (bookDetail = null, amountOfStock = 10, amountOfPurchased
   let totalPrice = 0;
   let message = '';
 
-  !amountOfStock ? (amountOfStock = 10) : (amountOfStock = amountOfStock);
-  !amountOfPurchasedBook ? (amountOfPurchasedBook = 1) : (amountOfPurchasedBook = amountOfPurchasedBook);
+  isNaN(amountOfStock) ? (amountOfStock = 10) : (amountOfStock = amountOfStock);
+  isNaN(amountOfPurchasedBook) ? (amountOfPurchasedBook = 1) : (amountOfPurchasedBook = amountOfPurchasedBook);
 
   const validationMessages = validator(amountOfStock, amountOfPurchasedBook, bookDetail, percentageDiscount, percentageTax);
+
   if (validationMessages.length > 0) {
     console.log('====== ERRORS ======');
     validationMessages.forEach((errorMessage) => {
       console.error(errorMessage);
     });
+
     message = 'something error';
     return { totalPrice, message };
   }
@@ -61,6 +63,11 @@ const bookPurchasing = (bookDetail = null, amountOfStock = 10, amountOfPurchased
 
 const validator = (amountOfStock, amountOfPurchasedBook, bookDetail, percentageDiscount, percentageTax) => {
   const errors = [];
+  // console.log('validator stock', amountOfStock);
+  if (amountOfStock < amountOfPurchasedBook) {
+    errors.push('stock empty');
+  }
+
   if (amountOfStock < 0 || amountOfStock % 1 !== 0) {
     errors.push('invalid amount of stock, integer positive number required');
   }
@@ -71,6 +78,10 @@ const validator = (amountOfStock, amountOfPurchasedBook, bookDetail, percentageD
 
   if (percentageDiscount < 0 || percentageDiscount > 100) {
     errors.push('discount amount invalid');
+  }
+
+  if (percentageTax < 0 || percentageTax > 100) {
+    errors.push('percentage amount invalid');
   }
 
   if (!bookDetail) {
@@ -84,8 +95,8 @@ const detailOfBook = {
   price: 45e2,
   title: 'Moriarty',
   isSoldOut: false,
-  amountOfPurchasedBook: 20,
-  amountOfStock: 20,
+  amountOfPurchasedBook: 1,
+  amountOfStock: 0,
   discount: 0,
   tax: 11,
 };

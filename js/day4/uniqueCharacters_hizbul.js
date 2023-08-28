@@ -14,7 +14,7 @@ console.log(hasUniqueCharacters("hello")); // Output: false
 //   const duplicateChars = [];
 //   str = str.toLowerCase();
 
-//   if (!/^[a-zA-Z]+$/.test(str)) {
+//   if (!/^[a-z]+$/.test(str)) {
 //     return 'must alphabet contains';
 //   }
 
@@ -35,29 +35,34 @@ console.log(hasUniqueCharacters("hello")); // Output: false
 
 function hasUniqueCharacters(str) {
   // Your logic here
-  const duplicateChars = [];
   str = str.toLowerCase();
 
   if (!/^[a-zA-Z]+$/.test(str)) {
     return 'must alphabet contains';
   }
 
-  let strArray = str.split('');
-  let result = strArray.some((value, index, arr) => {
-    console.log('cek index => ', index);
-    console.log('string yang dicek => ', value);
-    console.log('index dari value yang dicari => ', arr.lastIndexOf(value));
-    console.log('cek => ', arr.lastIndexOf(value) !== index);
-    return arr.lastIndexOf(value) !== index;
+  let charArray = str.split('');
+  let isExistDuplicateChar = charArray.some((char, index, arr) => {
+    // console.log('index saat ini => ', index);
+    // console.log('char saat ini => ', char);
+    // console.log('index terakhir dari char saat ini => ', arr.lastIndexOf(char));
+    // let indexOfChar = arr.lastIndexOf(char)
+    // console.log('char dari index terakhir => ', arr[indexOfChar]);
+    // console.log('cek index terakhir dari char saat ini dengan index saat ini => ', arr.lastIndexOf(char) !== index);
+    // kalo kedua index sama, artinya tidak ada duplikat char, kalo berbeda artinya ada lebih dari 1 char yang sama
+    return arr.lastIndexOf(char) !== index;
   });
-  console.log('hasil => ', result);
+  console.log('is exist duplicate char => ', isExistDuplicateChar);
   // jika string "aku"
   // a cari index, index of a = 0, apakah 0 tidak sama index saat ini yaitu = 0, ternyata sama, maka
-  // console.log(result);
-  return !result;
+  // console.log(isExistDuplicateChar);
+
+  return !isExistDuplicateChar;
 }
 
-console.log(hasUniqueCharacters('abcdefg')); // Output: true
+// console.log(hasUniqueCharacters('akks')); // Output: false
+// console.log(hasUniqueCharacters('abcdefg')); // Output: true
 console.log(hasUniqueCharacters('hello')); // Output: false
-console.log(hasUniqueCharacters('HellO')); // Output: false
-console.log(hasUniqueCharacters('HellO123')); // Output: false
+// console.log(hasUniqueCharacters('HellO')); // Output: false
+// console.log(hasUniqueCharacters('ssss')); // Output: false
+// console.log(hasUniqueCharacters('HellO123')); // Output: void error
