@@ -6,8 +6,6 @@ const bookPurchasing = (
   percentageTax = 11,
   lengthOfMonths = 1
 ) => {
-  const duePayments = [];
-  let currentDate = new Date();
   let totalPrice = 0;
   let message = '';
 
@@ -66,34 +64,7 @@ const bookPurchasing = (
   const finalStock = amountOfStock - amountOfPurchasedBook;
   finalStock > 0 ? (message = `You can purchase ${finalStock} item again`) : (message = `Book can't purchased again`);
 
-  let currDate = currentDate;
-//   currDate.setDate(currentDate.getDate() + 1);
-//   currDate.setDate(currentDate.getDate());
-//   console.log(currDate);
-  let currentMonth = currentDate.getMonth();
-  let currentYear = currentDate.getFullYear();
-  let pricePerMonth = totalPrice / lengthOfMonth;
-
-  for (let index = 0; index < lengthOfMonth; index++) {
-    if (currentMonth > 10) {
-      currentMonth = -1;
-      currentYear++;
-    }
-    // console.log(currentMonth);
-    // currDate.setDate(currDate.getDate());
-    // currDate.setMonth(currDate.getMonth() + 1);
-    // duePayments.push(`${index + 1} - [${currentYear}]${months[currDate.getMonth()]}, ${currDate.getDate()}   >>    ${pricePerMonth}`);
-    duePayments.push(`${index + 1} - [${currentYear}]${months[currentMonth + 1]}   >>    ${pricePerMonth}`);
-    currentMonth++;
-  }
-
-//   let tempDate = new Date();
-//   tempDate.setDate(tempDate.getDate() + 2);
-//   tempDate.setMonth(tempDate.getMonth() + 6);
-//   console.log(tempDate);
-
-  console.log('\n======= DUE PAYMENTS ========');
-  console.log('due payments => ', duePayments);
+  handleDueDateCreditTerm(totalPrice, lengthOfMonth);
 
   return { totalPrice, message };
 };
@@ -130,6 +101,52 @@ const validator = (amountOfStock, amountOfPurchasedBook, bookDetail, percentageD
   }
 
   return errors;
+};
+
+const handleDueDateCreditTerm = (totalPrice, lengthOfMonth) => {
+  let currentDate = new Date();
+  //   let currentDate = new Date(2023, 12, -3);
+  //   console.log("this current date", currentDate.toLocaleDateString());
+  //   let lastDayCurrentMonth = new Date(2023, 8, 0);
+  //   console.log(currentDate.setMonth(currentDate.getMonth() + 1));
+  //   console.log('currentDate currentDate ', currentDate.getDate());
+  //   console.log('currentDate month ', currentDate.getMonth());
+  //   console.log('currentDate currentDate ', currentDate.toLocaleDateString());
+  const duePayments = [];
+  currentDate.setMonth(currentDate.getMonth() + 1);
+
+  let currentYear = currentDate.getFullYear();
+  let currentDay = currentDate.getDate();
+  let currentMonth = currentDate.getMonth();
+  let pricePerMonth = totalPrice / lengthOfMonth;
+
+  for (let index = 0; index < lengthOfMonth; index++) {
+    if (currentMonth > 11) {
+      currentYear = currentDate.getFullYear() + 1;
+      currentDate = new Date(currentDate.getFullYear() + 1, 0);
+      currentMonth = 0;
+    }
+
+    // console.log('currentMonth', currentMonth);
+    let lastDayThisMonth = new Date(currentDate.getFullYear(), currentMonth + 1, 0);
+    // console.log('lastDayThisMonth', lastDayThisMonth);
+    let handleCurrentDayLastDay = currentDay > lastDayThisMonth.getDate() ? lastDayThisMonth.getDate() : currentDay;
+    // console.log('cek kondisi currentDate is gather then lastDayThisMonth', currentDay > lastDayThisMonth.getDate());
+
+    currentDate.setDate(currentDate.getDate());
+    // console.log('current month', currentMonth, months[currentMonth]);
+    // console.log('lastDayThisMonth', lastDayThisMonth.getDate());
+    // console.log('current day', currentDay);
+    // console.log('====\n');
+
+    duePayments.push(`${index + 1} - [${currentYear}] ${months[currentMonth]}, ${handleCurrentDayLastDay}   >>    ${pricePerMonth}`);
+    // duePayments.push(`${index + 1} - [${currentYear}] ${months[currentMonth + 1]}   >>    ${pricePerMonth}`);
+    currentMonth++;
+  }
+
+  //   console.log('current date => ', currentDate);
+    console.log('\n======= DUE PAYMENTS ========');
+    console.log('due payments => ', duePayments);
 };
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Desember'];
