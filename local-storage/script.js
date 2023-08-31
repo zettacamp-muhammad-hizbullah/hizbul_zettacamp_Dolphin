@@ -5,14 +5,8 @@
 //     description: string,
 // }
 const BOOK_KEY = 'books';
-addEventListener('DOMContentLoaded', async (event) => {    
+addEventListener('DOMContentLoaded', async (event) => {
   await generateListData();
-
-  //   let formAddNewBookEl = document.getElementById('form-new-book');
-  //   formAddNewBookEl.addEventListener('submit', function (e) {
-  //     e.preventDefault();
-  //     handleSubmitNewBook();
-  //   });
 
   let removeAllBookButtonEl = document.getElementById('remove-all-book');
   removeAllBookButtonEl.addEventListener('click', function (e) {
@@ -27,7 +21,7 @@ addEventListener('DOMContentLoaded', async (event) => {
     event.preventDefault();
   });
 
-  alert("FYI, that only the button you clicked will perform the action, so other buttons will be reset to the beginning.")
+  alert('FYI, that only the button you clicked will perform the action, so other buttons will be reset to the beginning.');
 });
 
 const addNewBook = (data) => {
@@ -107,11 +101,13 @@ const handleSubmitNewBook = () => {
   let showButtonFormEl = document.getElementById('show-button-form');
   let buttonAddNewBookEl = document.getElementById('save-button');
 
-  addNewBook({
-    name: nameElement.value,
-    author: authorElement.value,
-    description: descriptionElement.value,
-  });
+  if (nameElement.value && authorElement.value && descriptionElement.value) {
+    addNewBook({
+      name: nameElement.value,
+      author: authorElement.value,
+      description: descriptionElement.value,
+    });
+  }
 
   nameElement.value = '';
   authorElement.value = '';
@@ -201,6 +197,7 @@ const removeAllBook = () => {
   const books = getBooks();
   clearListData(books);
   localStorage.removeItem(BOOK_KEY);
+  generateListData()
 };
 
 const generateListData = async () => {
@@ -219,9 +216,11 @@ const generateListData = async () => {
         <td><span id="val-author-${book?.id}">${book?.author}</span> <input class="hidden" id="author-${book?.id}" /></td>
         <td><span id="val-description-${book?.id}">${book?.description}</span> <input class="hidden" id="description-${book?.id}" /></td>
         <td>
-            <button id="save-button-${book?.id}" class="hidden" onclick="handleUpdateBook('${book?.id}')">Save</button>
-            <button id="edit-button-${book?.id}" onclick="handleEditBook('${book?.id}')">Edit</button>
-            <button id="delete-button" class="delete_button_${book?.id}" onclick="handleDeleteBook('${book?.id}')">Delete</button>
+            <button id="save-button-${book?.id}" class="hidden update_button" onclick="handleUpdateBook('${book?.id}')">Save</button>
+            <button id="edit-button-${book?.id}" class="edit_button" onclick="handleEditBook('${book?.id}')">Edit</button>
+            <button id="delete-button" class="delete_button_${book?.id} delete_button" onclick="handleDeleteBook('${
+      book?.id
+    }')">Delete</button>
         </td>`;
     listDataBookEl.appendChild(row);
   });

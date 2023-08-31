@@ -49,3 +49,16 @@ main {
   align-items: center;
   justify-content: center;
 }
+
+.delete_button {
+    background-color: rgb(220, 71, 71);
+    color: white;
+}
+.edit_button {
+    background-color: rgb(209, 166, 58);
+    color: white;
+}
+.update_button{
+    background-color: rgb(129, 58, 209);
+    color: white;
+}
