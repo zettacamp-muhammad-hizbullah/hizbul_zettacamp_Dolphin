@@ -1,0 +1,51 @@
+* {
+  font-size: 20px;
+}
+body {
+  background-color: aliceblue;
+}
+
+thead > tr > th {
+  padding: 10px;
+  border-bottom: 3px solid black;
+}
+
+.hidden {
+  display: none;
+}
+
+table {
+  border: 1;
+  padding: 5px;
+  background-color: antiquewhite;
+  border-radius: 10px;
+  border-spacing: 10px;
+}
+
+table > tr {
+  overflow: auto;
+  width: 100%;
+}
+
+button {
+  background-color: burlywood;
+  border-radius: 10px;
+  padding: 3px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  border-radius: 10px;
+  padding: 5px 10px;
+  border: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+}

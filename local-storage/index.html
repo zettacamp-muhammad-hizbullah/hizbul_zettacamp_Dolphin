@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Inventory</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <section>
+        <button id="remove-all-book" onclick="removeAllBook()">Remove All Book</button>
+      </section>
+
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>no</th>
+              <th>title</th>
+              <th>author</th>
+              <th>description</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody id="list-data-books"></tbody>
+          <tfoot>
+            <tr>
+              <td id="total-book">0</td>
+              <td><input id="name" type="text" placeholder="name" required class="hidden" /></td>
+              <td><input id="author" type="text" placeholder="author" required class="hidden" /></td>
+              <td><input id="description" type="text" placeholder="description" required class="hidden" /></td>
+              <td>
+                <button id="save-button" onclick="handleSubmitNewBook()" class="hidden">Save</button>
+                <button id="show-button-form" onclick="toggleShowFormNewBook(true)">Add New Book</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </main>
+  </body>
+  <script src="./script.js"></script>
+</html>
