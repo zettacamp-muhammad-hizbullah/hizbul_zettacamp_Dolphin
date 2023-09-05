@@ -59,6 +59,7 @@ const bookPurchasing = (
       break;
     }
     totalPrice += priceAfterTax;
+    console.log("totalPrice", totalPrice);
   }
 
   const finalStock = amountOfStock - amountOfPurchasedBook;
