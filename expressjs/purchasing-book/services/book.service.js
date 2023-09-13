@@ -75,6 +75,8 @@ exports.bookPurchasing = async (
     totalPrice += priceAfterTax;
   }
 
+  totalPrice = Math.ceil(totalPrice);
+
   const finalStock = amountOfStock - amountOfPurchasedBook;
   finalStock > 0 ? (message = `You can purchase ${finalStock} item again`) : (message = `Book can't purchased again`);
 

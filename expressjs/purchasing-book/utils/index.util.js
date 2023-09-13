@@ -29,9 +29,9 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
 
   for (let index = 0; index < lengthOfMonth; index++) {
     if (index === lengthOfMonth - 1) {
-      priceInMonths.push(pricePerMonth + remaining);
+      priceInMonths.push(Math.ceil(pricePerMonth + remaining));
     } else {
-      priceInMonths.push(pricePerMonth);
+      priceInMonths.push(Math.ceil(pricePerMonth));
     }
 
     if (currentMonth > 11) {
@@ -44,12 +44,16 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
     let handleCurrentDayLastDay = currentDay > lastDayThisMonth.getDate() ? lastDayThisMonth.getDate() : currentDay;
 
     currentDate.setDate(currentDate.getDate());
+    // duePayments.push({
+    //   year: currentYear,
+    //   month: months[currentMonth],
+    //   day: handleCurrentDayLastDay,
+    //   amount: priceInMonths[index],
+    //   due_date: `${currentYear} ${months[currentMonth]} ${handleCurrentDayLastDay}`,
+    // });
     duePayments.push({
-      year: currentYear,
-      month: months[currentMonth],
-      day: handleCurrentDayLastDay,
+      date: `${currentYear}-${currentMonth + 1}-${handleCurrentDayLastDay}`,
       amount: priceInMonths[index],
-      due_date: `${currentYear} ${months[currentMonth]} ${handleCurrentDayLastDay}`,
     });
 
     currentMonth++;
@@ -58,22 +62,23 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
   console.log('\n======= DUE PAYMENTS ========');
   let totalPriceInTerm = 0;
   duePayments.map((duePayment, idx) => {
-    console.log(`${idx + 1} - [${duePayment.year}] ${duePayment.month}, ${duePayment.day}   >>    ${duePayment.amount}`);
+    // console.log(`${idx + 1} - [${duePayment.year}] ${duePayment.month}, ${duePayment.day}   >>    ${duePayment.amount}`);
+    console.log(`${idx + 1} - [${duePayment.date}]  >>    ${duePayment.amount}`);
     totalPriceInTerm += duePayment.amount;
   });
 
   if (targetTerm) {
     // handle not exist index
     if (duePayments[targetTerm - 1] !== undefined) {
-      if (additionalPrice>=0) {
-        isTermExist = true
-        duePayments[targetTerm - 1].amount += additionalPrice;              
+      if (additionalPrice >= 0) {
+        isTermExist = true;
+        duePayments[targetTerm - 1].amount += additionalPrice;
       } else {
-        isTermExist = false
+        isTermExist = false;
         message = `additional_price should be gather then equal 0`;
       }
     } else {
-      isTermExist = false
+      isTermExist = false;
       message = `can't update price of term in ${targetTerm} order, cause it not exist.`;
     }
   }
@@ -81,8 +86,52 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
   console.log(duePayments);
 
   console.log('total price in term', totalPriceInTerm);
+  console.log('totalPrice', totalPrice);
   console.log('total price === total price in term ?', totalPriceInTerm === totalPrice);
   return { duePayments, message, isTermExist };
+};
+
+exports.distincTermAmountAsArray = (termPayments) => {
+  const resultTerms = [];
+  const distinctTerms = new Set();
+
+  termPayments?.map((termPayment) => {
+    distinctTerms.add(termPayment?.amount);
+  });
+
+  for (let distincTerm of distinctTerms) {
+    resultTerms.push(distincTerm);
+  }
+
+  return resultTerms;
+};
+
+exports.mapTermPaymentDateAsKey = (termPayments) => {
+  let resultObjectMap = {};
+  const rawMapTerm = new Map();
+
+  termPayments?.map((termPayment) => {
+    rawMapTerm.set(termPayment?.date, termPayment);
+  });
+
+  rawMapTerm.forEach((val, key) => {
+    let currentObj = Object.assign({}, val);
+    Object.assign(resultObjectMap, {
+      [key]: currentObj,
+    });
+  });
+
+  return { resultObjectMap, rawMapTerm };
+};
+
+exports.handleTermToPay = (mapTermPayments, targetTerm) => {
+  let result = null;
+
+  if (mapTermPayments.has(targetTerm)) {
+    result = mapTermPayments.get(targetTerm);
+  }
+
+  return result;
 };
 
 exports.baseResponse = (res, { success = true, data = null, response = { code: 200, message: null, error: null } }) => {
