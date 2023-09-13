@@ -14,8 +14,6 @@ exports.purchaseBook = async (req, res) => {
   let percentageDiscount = reqBody?.discount || 0;
   let percentageTax = reqBody?.tax || 0;
   let lengthOfMonths = reqBody?.term || 2;
-  let targetTerm = reqBody?.target_term || null;
-  let additionalPrice = reqBody?.additional_price || 0;
 
   //   handle validation request
 
@@ -25,9 +23,7 @@ exports.purchaseBook = async (req, res) => {
     amountOfPurchasedBook,
     percentageDiscount,
     percentageTax,
-    lengthOfMonths,
-    targetTerm,
-    additionalPrice
+    lengthOfMonths
   );
 
   let totalDiscount = result?.amountOfDiscount * amountOfPurchasedBook;

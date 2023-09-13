@@ -10,11 +10,10 @@ exports.decodeBasicAuth = (rawEncoded) => {
   };
 };
 
-exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm = null, additionalPrice = 0) => {
+exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth) => {
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Desember'];
 
   let message = '';
-  let isTermExist = false;
   let currentDate = new Date();
   const duePayments = [];
   currentDate.setMonth(currentDate.getMonth() + 1);
@@ -62,27 +61,11 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
     totalPriceInTerm += duePayment.amount;
   });
 
-  if (targetTerm) {
-    // handle not exist index
-    if (duePayments[targetTerm - 1] !== undefined) {
-      if (additionalPrice>=0) {
-        isTermExist = true
-        duePayments[targetTerm - 1].amount += additionalPrice;              
-      } else {
-        isTermExist = false
-        message = `additional_price should be gather then equal 0`;
-      }
-    } else {
-      isTermExist = false
-      message = `can't update price of term in ${targetTerm} order, cause it not exist.`;
-    }
-  }
-
   console.log(duePayments);
 
   console.log('total price in term', totalPriceInTerm);
   console.log('total price === total price in term ?', totalPriceInTerm === totalPrice);
-  return { duePayments, message, isTermExist };
+  return { duePayments, message };
 };
 
 exports.baseResponse = (res, { success = true, data = null, response = { code: 200, message: null, error: null } }) => {

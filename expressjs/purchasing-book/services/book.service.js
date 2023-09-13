@@ -7,9 +7,7 @@ exports.bookPurchasing = async (
   amountOfPurchasedBook = 1,
   percentageDiscount = 0,
   percentageTax = 11,
-  lengthOfMonths = 1,
-  targetTermToAddAdditionalPrice = null,
-  additionalPrice = 0
+  lengthOfMonths = 1
 ) => {
   let totalPrice = 0;
   let message = '';
@@ -79,14 +77,8 @@ exports.bookPurchasing = async (
   finalStock > 0 ? (message = `You can purchase ${finalStock} item again`) : (message = `Book can't purchased again`);
 
   const {
-    duePayments: termPayments,
-    message: termMessage,
-    isTermExist,
-  } = await handleDueDateCreditTerm(totalPrice, lengthOfMonths, targetTermToAddAdditionalPrice, additionalPrice);
-  message += termMessage ? `,& ${termMessage}` : '';
-  if (isTermExist) {
-    totalPrice += additionalPrice;
-  }
+    duePayments: termPayments
+  } = await handleDueDateCreditTerm(totalPrice, lengthOfMonths);
 
   const result = {
     totalPrice,
