@@ -9,7 +9,7 @@ exports.loginValidator = async (req, res, next) => {
       success: false,
       data: null,
       message: null,
-      errors: 'unauthenticated',
+      errors: 'invalid credential',
     });
     return;
   }

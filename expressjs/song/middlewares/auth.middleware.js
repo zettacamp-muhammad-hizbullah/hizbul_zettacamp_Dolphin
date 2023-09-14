@@ -1,5 +1,5 @@
 const { SECRET_KEY } = require('../config/app.config');
-const { decodeBasicAuth, getToken } = require('../utils/index.util');
+const { getToken } = require('../utils/index.util');
 const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res, next) => {
@@ -7,14 +7,13 @@ module.exports = async (req, res, next) => {
     if (!req.headers.authorization) throw new Error('unauthenticated');
 
     const token = getToken(req.headers.authorization);
-    console.log(token);
-    const isVerified = jwt.verify(token, SECRET_KEY)
-    console.log(isVerified);
-    
-    if (isVerified) {
+    // console.log(token);
+    // console.log(new Date());
+    const decodedPayload = jwt.verify(token, SECRET_KEY);
+    console.log('decodedPayload', decodedPayload);
+
+    if (decodedPayload) {
       next();
-    } else {
-      throw new Error('unauthenticated');
     }
   } catch (error) {
     res.status(401).json({
