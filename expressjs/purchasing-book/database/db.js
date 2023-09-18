@@ -10,7 +10,7 @@ const db_connect = () => {
       useUnifiedTopology: true,
     })
     .then(() => {
-      console.info('connected to mongodb', ', and database = ', DB_NAME);
+      console.info('connected to mongodb', ', with database = ', DB_NAME);
     })
     .catch((err) => {
       console.error(err);

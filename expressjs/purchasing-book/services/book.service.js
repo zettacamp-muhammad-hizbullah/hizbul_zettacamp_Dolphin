@@ -38,6 +38,7 @@ exports.updateBook = async (bookId, payload) => {
   try {
     result = await Model.book.findOneAndUpdate({ _id: bookId }, payload, {
       new: true,
+      runValidators: true,
     });
   } catch (error) {
     throw new Error(error);
