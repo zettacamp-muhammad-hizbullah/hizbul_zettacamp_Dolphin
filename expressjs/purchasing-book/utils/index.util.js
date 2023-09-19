@@ -75,7 +75,7 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
         duePayments[targetTerm - 1].amount += additionalPrice;
       } else {
         isTermExist = false;
-        message = `additional_price should be gather then equal 0`;
+        message = `additional_price should be greater then equal 0`;
       }
     } else {
       isTermExist = false;

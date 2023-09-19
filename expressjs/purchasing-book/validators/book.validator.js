@@ -51,28 +51,28 @@ exports.bookPurchaseValidator = async (req, res, next) => {
     errors.push('amount must be number');
   }
   if (reqBody?.amount < 1) {
-    errors.push('amount must be gather then 0');
+    errors.push('amount must be greater then 0');
   }
 
   if (isNaN(reqBody?.term)) {
     errors.push('term must be number');
   }
   if (reqBody?.term < 1) {
-    errors.push('term must be gather then 0');
+    errors.push('term must be greater then 0');
   }
 
   if (isNaN(reqBody?.discount)) {
     errors.push('discount must be number');
   }
   if (reqBody?.discount < 0) {
-    errors.push('discount must be gather then or equal 0');
+    errors.push('discount must be greater then or equal 0');
   }
 
   if (isNaN(reqBody?.tax)) {
     errors.push('tax must be number');
   }
   if (reqBody?.tax < 0) {
-    errors.push('tax must be gather then or equal 0');
+    errors.push('tax must be greater then or equal 0');
   }
 
   if (!reqBody?.book_id) {
@@ -123,14 +123,14 @@ exports.bookCreateValidator = async (req, res, next) => {
     errors.push('price must be number');
   }
   if (reqBody?.price < 1) {
-    errors.push('price must be gather then 0');
+    errors.push('price must be greater then 0');
   }
 
   if (isNaN(reqBody?.stock)) {
     errors.push('stock must be number');
   }
   if (reqBody?.stock < 1) {
-    errors.push('stock must be gather then 0');
+    errors.push('stock must be greater then 0');
   }
 
   if (errors.length > 0) {
@@ -165,14 +165,14 @@ exports.bookUpdateValidator = async (req, res, next) => {
     errors.push('price must be number');
   }
   if (reqBody?.price < 1) {
-    errors.push('price must be gather then 0');
+    errors.push('price must be greater then 0');
   }
 
   if (isNaN(reqBody?.stock)) {
     errors.push('stock must be number');
   }
   if (reqBody?.stock < 1) {
-    errors.push('stock must be gather then 0');
+    errors.push('stock must be greater then 0');
   }
 
   if (errors.length > 0) {
