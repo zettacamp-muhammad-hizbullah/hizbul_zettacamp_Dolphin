@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Model = require('../models/index.model');
 
 exports.createOneBookShelf = async (payload) => {
@@ -32,6 +33,94 @@ exports.retriveBookShelves = async (bookId) => {
   return result;
 };
 
+exports.retriveBookShelvesGenreDistinct = async () => {
+  let result = [];
+  try {
+    result = await Model.bookShelf
+      .find()
+      .populate('books')
+      .exec(function (err, bookShelf) {});
+
+    // result = await Model.bookShelf.find().populate('books').distinct('books.genre');
+    // result = await Model.bookShelf
+    //   .find({}, function(err, result) {
+    //     console.log(result);
+    //   })
+    // .distinct('books', function(err, book) {
+
+    //   console.log(book);
+    // });
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveBookShelvesGenreDistinctEmbedded = async () => {
+  let result = [];
+  try {
+    result = await Model.bookShelf.find().distinct('embedded_books.genre');
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveBookShelvesElemMatch = async (value) => {
+  let result = [];
+  try {
+    result = await Model.bookShelf
+      .find()
+      .select(['-embedded_books'])
+      .populate({
+        path: 'books',
+        match: {
+          genre: {
+            $elemMatch: {
+              $eq: value,
+            },
+          },
+        },
+      });
+
+    // result = await Model.bookShelf
+    //   .find({
+    //     books: {
+    //       $elemMatch: {
+    //         $in: value,
+    //       },
+    //     },
+    //   })
+    //   .populate('books');
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveBookShelvesElemMatchEmbedded = async (value) => {
+  let result = [];
+  try {
+    result = await Model.bookShelf
+      .find({
+        embedded_books: {
+          $elemMatch: {
+            genre: 'story',
+            price: 143000
+          },
+        },
+      })
+      .select(['-books']);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
 exports.retriveBookShelfById = async (bookId) => {
   let result = null;
   try {
@@ -50,6 +139,72 @@ exports.updateBookShelf = async (bookId, payload) => {
       new: true,
       runValidators: true,
     });
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.updateBookShelfArrayFilter = async (bookShelfId, bookId, newBookId) => {
+  let result = null;
+  try {
+    // result = await Model.bookShelf.findOneAndUpdate(
+    //   { _id: bookShelfId },
+    //   {
+    //     $set: {
+    //       'books.$[book]': newBookId,
+    //     },
+    //   },
+    //   {
+    //     arrayFilters: [{ book: bookId }],
+    //     new: true,
+    //     runValidators: true,
+    //   }
+    // );
+    result = await Model.bookShelf.findOneAndUpdate(
+      { _id: bookShelfId },
+      {
+        $set: {
+          'books.$[book]': newBookId,
+        },
+      },
+      {
+        arrayFilters: [{ book: bookId }],
+        new: true,
+        runValidators: true,
+      }
+    );
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.updateBookShelfArrayFilterEmbedded = async (bookShelfId, bookId, newStock) => {
+  let result = null;
+  try {
+    result = await Model.bookShelf.findOneAndUpdate(
+      { _id: bookShelfId },
+      {
+        $set: {
+          'embedded_books.$[book].stock': newStock,
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            'book._id': {
+              $eq: bookId,
+            },
+          },
+        ],
+        new: true,
+        select: '-embedded_books',
+        runValidators: true,
+      }
+    );
   } catch (error) {
     throw new Error(error);
   }

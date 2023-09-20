@@ -5,12 +5,13 @@ module.exports = (mongoose) => {
         type: String,
         required: true,
       },
+      embedded_books: [{ type: mongoose.model('Book').schema }],
       books: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Book'
-        }
-      ],      
+          ref: 'Book',
+        },
+      ],
     },
     {
       timestamps: true,

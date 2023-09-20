@@ -10,6 +10,7 @@ module.exports = (mongoose) => {
         type: Number,
         default: 0,
       },
+      genre: [{ type: String }],
     },
     {
       timestamps: true,

@@ -60,6 +60,93 @@ exports.getBookShelves = async (req, res) => {
   }
 };
 
+exports.getBookShelvesElemMatch = async (req, res) => {
+  try {
+    const genre = req?.params?.genre;
+    // let validBookId = mongoose.Types.ObjectId(bookId);
+    let errors = null;
+
+    const result = await bookShelfService.retriveBookShelvesElemMatch(genre);
+    res.json({
+      success: true,
+      data: result,
+      message: 'book shelf data retrived',
+      errors: errors?.message,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getBookShelvesElemMatchEmbedded = async (req, res) => {
+  try {
+    const genre = req?.params?.genre;
+    let errors = null;
+
+    const result = await bookShelfService.retriveBookShelvesElemMatchEmbedded(genre);
+    res.json({
+      success: true,
+      data: result,
+      message: 'book shelf data retrived',
+      errors: errors?.message,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getBookShelvesGenreDistinct = async (req, res) => {
+  try {
+    let errors = null;
+
+    const result = await bookShelfService.retriveBookShelvesGenreDistinct();
+    res.json({
+      success: true,
+      data: result,
+      message: 'book shelf genre distinct data retrived',
+      errors: errors?.message,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getBookShelvesGenreDistinctEmbedded = async (req, res) => {
+  try {
+    let errors = null;
+
+    const result = await bookShelfService.retriveBookShelvesGenreDistinctEmbedded();
+    res.json({
+      success: true,
+      data: result,
+      message: 'book shelf genre distinct data retrived',
+      errors: errors?.message,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
 exports.getBookShelfById = async (req, res) => {
   try {
     const bookShelfId = req?.params?.id;
@@ -101,6 +188,76 @@ exports.updateBookShelfById = async (req, res) => {
     };
 
     const result = await bookShelfService.updateBookShelf(bookShelfId, payload);
+    if (result) {
+      res.json({
+        success: true,
+        data: result,
+        message: 'book shelf data updated',
+        errors: null,
+      });
+      return;
+    }
+
+    res.status(404).json({
+      success: false,
+      data: result,
+      message: 'book shelf data not found',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.updateBookShelfByIdArrayFilter = async (req, res) => {
+  try {
+    const reqBody = req?.body;
+    const bookShelfId = req?.params?.id;
+
+    const bookId = reqBody?.book_id;
+    const newBookId = reqBody?.new_book_id;
+
+    const result = await bookShelfService.updateBookShelfArrayFilter(bookShelfId, bookId, newBookId);
+    if (result) {
+      res.json({
+        success: true,
+        data: result,
+        message: 'book shelf data updated',
+        errors: null,
+      });
+      return;
+    }
+
+    res.status(404).json({
+      success: false,
+      data: result,
+      message: 'book shelf data not found',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.updateBookShelfByIdArrayFilterEmbedded = async (req, res) => {
+  try {
+    const reqBody = req?.body;
+    const bookShelfId = req?.params?.id;
+
+    const bookId = reqBody?.book_id;
+    const newStock = reqBody?.new_stock;
+
+    const result = await bookShelfService.updateBookShelfArrayFilterEmbedded(bookShelfId, bookId, newStock);
     if (result) {
       res.json({
         success: true,
