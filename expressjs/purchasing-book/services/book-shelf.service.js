@@ -33,6 +33,37 @@ exports.retriveBookShelves = async (bookId) => {
   return result;
 };
 
+exports.retriveBookShelvesAggregate = async (_) => {
+  let result = [];
+  try {
+    result = await Model.bookShelf.aggregate([
+      {
+        $project: {
+          embedded_books: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          __v: 0,
+        },
+      },
+      {
+        $unwind: '$books',
+      },
+      {
+        $lookup: {
+          from: 'books',
+          localField: 'books',
+          foreignField: '_id',
+          as: 'books_data',
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
 exports.retriveBookShelvesGenreDistinct = async () => {
   let result = [];
   try {
@@ -109,7 +140,7 @@ exports.retriveBookShelvesElemMatchEmbedded = async (value) => {
         embedded_books: {
           $elemMatch: {
             genre: 'story',
-            price: 143000
+            price: 143000,
           },
         },
       })

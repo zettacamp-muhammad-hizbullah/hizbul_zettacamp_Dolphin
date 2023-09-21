@@ -22,6 +22,39 @@ exports.retriveBooks = async () => {
   return result;
 };
 
+exports.retriveBooksAggregate = async () => {
+  let result = [];
+  try {
+    result = await Model.book.aggregate([
+      {
+        $project: {
+          title: 1,
+          price: 1,
+        },
+      },
+      {
+        $addFields: {
+          discount: 10000,
+          // price_after_discount: {
+          //   $subtract: ['$price', 10000],
+          // },
+        },
+      },
+      {
+        $addFields: {
+          price_after_discount: {
+            $subtract: ['$price', '$discount'],
+          },
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
 exports.retriveBookById = async (bookId) => {
   let result = null;
   try {

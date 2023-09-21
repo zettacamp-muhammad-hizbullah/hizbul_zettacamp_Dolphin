@@ -46,6 +46,25 @@ exports.getBooks = async (_, res) => {
   }
 };
 
+exports.getBooksAggregate = async (_, res) => {
+  try {
+    const result = await bookService.retriveBooksAggregate();
+    res.json({
+      success: true,
+      data: result,
+      message: 'books data retrived',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
 exports.getBookById = async (req, res) => {
   try {
     const bookId = req?.params?.id;

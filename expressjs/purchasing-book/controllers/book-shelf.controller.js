@@ -60,6 +60,25 @@ exports.getBookShelves = async (req, res) => {
   }
 };
 
+exports.getBookShelvesAggregate = async (_, res) => {
+  try {
+    const result = await bookShelfService.retriveBookShelvesAggregate();
+    res.json({
+      success: true,
+      data: result,
+      message: 'book shelf data retrived',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
 exports.getBookShelvesElemMatch = async (req, res) => {
   try {
     const genre = req?.params?.genre;
