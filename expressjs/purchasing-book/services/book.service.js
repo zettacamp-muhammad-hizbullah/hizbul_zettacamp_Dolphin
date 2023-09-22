@@ -22,22 +22,36 @@ exports.retriveBooks = async () => {
   return result;
 };
 
-exports.retriveBooksAggregate = async () => {
+exports.retriveBooksAggregate = async (authorFirstName = 'Hasanudin', sortBy = 1) => {
   let result = [];
   try {
     result = await Model.book.aggregate([
       {
+        $match: {
+          'author.first_name': authorFirstName,
+        },
+      },
+      {
+        $sort: {
+          price: sortBy,
+        },
+      },
+      {
         $project: {
           title: 1,
           price: 1,
+          author: {
+            first_name: 1,
+            last_name: 1,
+            full_name: {
+              $concat: ['$author.first_name', ' ', '$author.last_name'],
+            },
+          },
         },
       },
       {
         $addFields: {
           discount: 10000,
-          // price_after_discount: {
-          //   $subtract: ['$price', 10000],
-          // },
         },
       },
       {

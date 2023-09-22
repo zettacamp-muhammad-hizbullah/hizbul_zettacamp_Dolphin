@@ -10,6 +10,14 @@ module.exports = (mongoose) => {
         type: Number,
         default: 0,
       },
+      author: {
+        first_name: {
+          type: String
+        },
+        last_name: {
+          type: String
+        },
+      },
       genre: [{ type: String }],
     },
     {

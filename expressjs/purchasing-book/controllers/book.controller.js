@@ -46,9 +46,11 @@ exports.getBooks = async (_, res) => {
   }
 };
 
-exports.getBooksAggregate = async (_, res) => {
+exports.getBooksAggregate = async (req, res) => {
   try {
-    const result = await bookService.retriveBooksAggregate();
+    const authorFirstName = req?.query?.author_first_name;
+    const sortBy = req?.query?.sort_by;
+    const result = await bookService.retriveBooksAggregate(authorFirstName, sortBy === 'asc' ? 1 : -1);
     res.json({
       success: true,
       data: result,

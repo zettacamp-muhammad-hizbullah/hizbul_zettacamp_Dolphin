@@ -33,7 +33,7 @@ exports.retriveBookShelves = async (bookId) => {
   return result;
 };
 
-exports.retriveBookShelvesAggregate = async (_) => {
+exports.retriveBookShelvesAggregate = async () => {
   let result = [];
   try {
     result = await Model.bookShelf.aggregate([
@@ -45,16 +45,16 @@ exports.retriveBookShelvesAggregate = async (_) => {
           __v: 0,
         },
       },
-      {
-        $unwind: '$books',
-      },
+      // {
+      //   $unwind: '$books',
+      // },
       {
         $lookup: {
           from: 'books',
           localField: 'books',
           foreignField: '_id',
           as: 'books_data',
-        },
+        },        
       },
     ]);
   } catch (error) {
