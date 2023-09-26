@@ -11,10 +11,110 @@ exports.createOneBook = async (payload) => {
   return result;
 };
 
-exports.retriveBooks = async () => {
+exports.retriveBooks = async (limit, skip) => {
+  let skipData = (skip - 1) * limit;
+  let result = [];
+
+  try {
+    // result = await Model.book.find();
+    result = await Model.book.aggregate([
+      // {
+      //   $skip: skipData,
+      // },
+      // {
+      //   $limit: limit,
+      // },
+      {
+        $facet: {
+          paginated_book: [
+            {
+              $skip: skipData,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          group_by_author: [
+            {
+              $skip: skipData,
+            },
+            {
+              $limit: limit,
+            },
+            {
+              $group: {
+                _id: '$author',
+                books: { $push: '$$ROOT' },
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveBooksGroupByAuthor = async () => {
   let result = [];
   try {
-    result = await Model.book.find();
+    result = await Model.book.aggregate([
+      {
+        $group: {
+          _id: '$author',
+          books: {
+            $push: '$$ROOT',
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveBooksFacet = async () => {
+  let result = [];
+  try {
+    result = await Model.book.aggregate([
+      {
+        $facet: {
+          group_by_author: [
+            {
+              $group: {
+                _id: '$author',
+                books: {
+                  $push: '$$ROOT',
+                },
+              },
+            },
+          ],
+          group_by_price: [
+            {
+              $group: {
+                _id: '$price',
+                books: { $push: '$$ROOT' },
+              },
+            },
+          ],
+        },
+      },
+      // {
+      //   $sort: {
+      //     price: sortBy,
+      //   },
+      // },
+    ]);
   } catch (error) {
     throw new Error(error);
   }

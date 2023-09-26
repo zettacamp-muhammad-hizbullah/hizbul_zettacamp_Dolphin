@@ -27,9 +27,19 @@ exports.storeBook = async (req, res) => {
   }
 };
 
-exports.getBooks = async (_, res) => {
+exports.getBooks = async (req, res) => {
   try {
-    const result = await bookService.retriveBooks();
+    let perPage = req?.query?.perPage || 10;
+    let page = req?.query?.page || 1;
+
+    if (perPage < 1) {
+      perPage = 1;
+    }
+    if (page < 1) {
+      page = 1;
+    }
+
+    const result = await bookService.retriveBooks(Number(perPage), Number(page));
     res.json({
       success: true,
       data: result,
@@ -51,6 +61,44 @@ exports.getBooksAggregate = async (req, res) => {
     const authorFirstName = req?.query?.author_first_name;
     const sortBy = req?.query?.sort_by;
     const result = await bookService.retriveBooksAggregate(authorFirstName, sortBy === 'asc' ? 1 : -1);
+    res.json({
+      success: true,
+      data: result,
+      message: 'books data retrived',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getBooksAggregateFacet = async (req, res) => {
+  try {
+    const result = await bookService.retriveBooksFacet();
+    res.json({
+      success: true,
+      data: result,
+      message: 'books data retrived',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getBooksAggregateGroup = async (req, res) => {
+  try {
+    const result = await bookService.retriveBooksGroupByAuthor();
     res.json({
       success: true,
       data: result,
