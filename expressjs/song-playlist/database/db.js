@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const DB_URL = 'mongodb://localhost:27017';
-const DB_NAME = 'books';
+const DB_NAME = 'songs';
 
 const db_connect = () => {
   mongoose

@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
-const bookShelfService = require('../services/book-shelf.service');
-const bookService = require('../services/book.service');
+const playlistService = require('../services/playlist.service');
+const songService = require('../services/song.service');
 
-exports.storeBookShelf = async (req, res) => {
+exports.storePlaylist = async (req, res) => {
   try {
     const reqBody = req?.body;
 
     const payload = {
       name: reqBody?.name,
-      books: reqBody?.books,
+      songs: reqBody?.songs || [],
     };
 
-    const result = await bookShelfService.createOneBookShelf(payload);
+    const result = await playlistService.createOnePlaylist(payload);
+
     res.json({
       success: true,
       data: result,
-      message: 'book shelf stored successfully',
+      message: 'playlist stored successfully',
       errors: null,
     });
   } catch (error) {
@@ -28,26 +29,48 @@ exports.storeBookShelf = async (req, res) => {
   }
 };
 
-exports.getBookShelves = async (req, res) => {
+exports.getPlaylistsRandom = async (req, res) => {
+  let maxSecond = req?.query?.maxSecond || null;
+
   try {
-    const { bookId } = req?.query;
-    let validatedBookId = null;
-    let errors = null;
-
-    if (bookId) {
-      try {
-        validatedBookId = mongoose.Types.ObjectId(bookId);
-      } catch (error) {
-        errors = error;
-        validatedBookId = null;
-      }
-    }
-
-    const result = await bookShelfService.retriveBookShelves(validatedBookId);
+    const result = await playlistService.retriveRandomPlaylists(maxSecond);
     res.json({
       success: true,
       data: result,
-      message: 'book shelf data retrived',
+      message: 'playlist data retrived',
+      errors: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error?.message || 'something went wrong',
+      errors: error,
+    });
+  }
+};
+
+exports.getPlaylists = async (req, res) => {
+  try {
+    // const { songId } = req?.query;
+    let name = req?.query?.search || null;
+    let perPage = req?.query?.perPage || 10;
+    let page = req?.query?.page || 1;
+
+    if (perPage < 1) {
+      perPage = 1;
+    }
+    if (page < 1) {
+      page = 1;
+    }
+
+    let errors = null;
+
+    const result = await playlistService.retrivePlaylists(Number(perPage), Number(page), name);
+    res.json({
+      success: true,
+      data: result,
+      message: 'playlist data retrived',
       errors: errors?.message,
     });
   } catch (error) {
@@ -62,7 +85,7 @@ exports.getBookShelves = async (req, res) => {
 
 exports.getBookShelvesAggregate = async (_, res) => {
   try {
-    const result = await bookShelfService.retriveBookShelvesAggregate();
+    const result = await playlistService.retriveBookShelvesAggregate();
     res.json({
       success: true,
       data: result,
@@ -85,7 +108,7 @@ exports.getBookShelvesElemMatch = async (req, res) => {
     // let validBookId = mongoose.Types.ObjectId(bookId);
     let errors = null;
 
-    const result = await bookShelfService.retriveBookShelvesElemMatch(genre);
+    const result = await playlistService.retriveBookShelvesElemMatch(genre);
     res.json({
       success: true,
       data: result,
@@ -107,7 +130,7 @@ exports.getBookShelvesElemMatchEmbedded = async (req, res) => {
     const genre = req?.params?.genre;
     let errors = null;
 
-    const result = await bookShelfService.retriveBookShelvesElemMatchEmbedded(genre);
+    const result = await playlistService.retriveBookShelvesElemMatchEmbedded(genre);
     res.json({
       success: true,
       data: result,
@@ -128,7 +151,7 @@ exports.getBookShelvesGenreDistinct = async (req, res) => {
   try {
     let errors = null;
 
-    const result = await bookShelfService.retriveBookShelvesGenreDistinct();
+    const result = await playlistService.retriveBookShelvesGenreDistinct();
     res.json({
       success: true,
       data: result,
@@ -149,7 +172,7 @@ exports.getBookShelvesGenreDistinctEmbedded = async (req, res) => {
   try {
     let errors = null;
 
-    const result = await bookShelfService.retriveBookShelvesGenreDistinctEmbedded();
+    const result = await playlistService.retriveBookShelvesGenreDistinctEmbedded();
     res.json({
       success: true,
       data: result,
@@ -166,15 +189,15 @@ exports.getBookShelvesGenreDistinctEmbedded = async (req, res) => {
   }
 };
 
-exports.getBookShelfById = async (req, res) => {
+exports.getPlaylistById = async (req, res) => {
   try {
-    const bookShelfId = req?.params?.id;
-    const result = await bookShelfService.retriveBookShelfById(bookShelfId);
+    const playlistId = req?.params?.id;
+    const result = await playlistService.retrivePlaylistById(playlistId);
     if (result) {
       res.json({
         success: true,
         data: result,
-        message: 'book shelf data retrived',
+        message: 'playlist data retrived',
         errors: null,
       });
       return;
@@ -183,7 +206,7 @@ exports.getBookShelfById = async (req, res) => {
     res.status(404).json({
       success: false,
       data: result,
-      message: 'book shelf data not found',
+      message: 'playlist data not found',
       errors: null,
     });
   } catch (error) {
@@ -196,22 +219,22 @@ exports.getBookShelfById = async (req, res) => {
   }
 };
 
-exports.updateBookShelfById = async (req, res) => {
+exports.updatePlaylistById = async (req, res) => {
   try {
     const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
+    const playlistId = req?.params?.id;
 
     const payload = {
       name: reqBody?.name,
-      books: reqBody?.books,
+      songs: reqBody?.songs || [],
     };
 
-    const result = await bookShelfService.updateBookShelf(bookShelfId, payload);
+    const result = await playlistService.updatePlaylist(playlistId, payload);
     if (result) {
       res.json({
         success: true,
         data: result,
-        message: 'book shelf data updated',
+        message: 'playlist data updated',
         errors: null,
       });
       return;
@@ -220,7 +243,7 @@ exports.updateBookShelfById = async (req, res) => {
     res.status(404).json({
       success: false,
       data: result,
-      message: 'book shelf data not found',
+      message: 'playlist data not found',
       errors: null,
     });
   } catch (error) {
@@ -241,7 +264,7 @@ exports.updateBookShelfByIdArrayFilter = async (req, res) => {
     const bookId = reqBody?.book_id;
     const newBookId = reqBody?.new_book_id;
 
-    const result = await bookShelfService.updateBookShelfArrayFilter(bookShelfId, bookId, newBookId);
+    const result = await playlistService.updateBookShelfArrayFilter(bookShelfId, bookId, newBookId);
     if (result) {
       res.json({
         success: true,
@@ -276,7 +299,7 @@ exports.updateBookShelfByIdArrayFilterEmbedded = async (req, res) => {
     const bookId = reqBody?.book_id;
     const newStock = reqBody?.new_stock;
 
-    const result = await bookShelfService.updateBookShelfArrayFilterEmbedded(bookShelfId, bookId, newStock);
+    const result = await playlistService.updateBookShelfArrayFilterEmbedded(bookShelfId, bookId, newStock);
     if (result) {
       res.json({
         success: true,
@@ -303,43 +326,41 @@ exports.updateBookShelfByIdArrayFilterEmbedded = async (req, res) => {
   }
 };
 
-exports.addBooksToBookShelfById = async (req, res) => {
+exports.addSongsToPlaylistById = async (req, res) => {
   try {
     const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
+    const playlistId = req?.params?.id;
+    console.log('playlistId', playlistId);
     let errors = [];
 
     const payload = {
-      books: reqBody?.books,
+      songs: reqBody?.songs,
     };
 
-    const books = [];
+    const songs = [];
 
-    for (const bookId of payload.books) {
-      let validBookId = null;
-      let book = null;
+    for (const songId of payload.songs) {
+      let song = null;
 
       try {
-        validBookId = mongoose.Types.ObjectId(bookId);
-        book = await bookService.retriveBookById(validBookId);
+        song = await songService.retriveSongById(songId);
       } catch (error) {
-        book = null;
-        validBookId = null;
+        song = null;
       }
 
-      if (book) {
-        books.push(validBookId);
+      if (song) {
+        songs.push(songId);
       } else {
-        errors.push(`${bookId} ignored, because not valid book id`);
+        errors.push(`${songId} ignored, because not valid song id`);
       }
     }
 
-    const result = await bookShelfService.addBooks(bookShelfId, books);
+    const result = await playlistService.addSongs(playlistId, songs);
     if (result) {
       res.json({
         success: true,
         data: result,
-        message: 'books data in book shelf updated',
+        message: 'songs data in playlist updated',
         errors: errors.length > 0 ? errors : null,
       });
       return;
@@ -348,7 +369,7 @@ exports.addBooksToBookShelfById = async (req, res) => {
     res.status(404).json({
       success: false,
       data: result,
-      message: 'book shelf data not found',
+      message: 'playlist data not found',
       errors: null,
     });
   } catch (error) {
@@ -361,18 +382,18 @@ exports.addBooksToBookShelfById = async (req, res) => {
   }
 };
 
-exports.removeBookFromBookShelfById = async (req, res) => {
+exports.removeSongFromPlaylistById = async (req, res) => {
   try {
-    const bookShelfId = req?.params?.id;
-    const bookId = req?.params?.bookId;
+    const playlistId = req?.params?.id;
+    const songId = req?.params?.songId;
     let errors = [];
 
-    const result = await bookShelfService.removeBook(bookShelfId, bookId);
+    const result = await playlistService.removeSong(playlistId, songId);
     if (result) {
       res.json({
         success: true,
         data: result,
-        message: 'books data in book shelf updated',
+        message: 'songs data in playlist updated',
         errors: errors.length > 0 ? errors : null,
       });
       return;
@@ -381,7 +402,7 @@ exports.removeBookFromBookShelfById = async (req, res) => {
     res.status(404).json({
       success: false,
       data: result,
-      message: 'book shelf data not found',
+      message: 'playlist data not found',
       errors: null,
     });
   } catch (error) {
@@ -394,14 +415,14 @@ exports.removeBookFromBookShelfById = async (req, res) => {
   }
 };
 
-exports.deleteBookShelfById = async (req, res) => {
+exports.deletePlaylistById = async (req, res) => {
   try {
-    const bookShelfId = req?.params?.id;
-    const result = await bookShelfService.deleteBookShelfById(bookShelfId);
+    const playlistId = req?.params?.id;
+    const result = await playlistService.deletePlaylistById(playlistId);
     res.json({
       success: true,
       data: result,
-      message: 'book shelf data deleted',
+      message: 'playlist data deleted',
       errors: null,
     });
   } catch (error) {

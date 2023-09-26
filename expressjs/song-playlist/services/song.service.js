@@ -1,9 +1,9 @@
 const Model = require('../models/index.model');
 
-exports.createOneBook = async (payload) => {
+exports.createOneSong = async (payload) => {
   let result = null;
   try {
-    result = await Model.book.create(payload);
+    result = await Model.song.create(payload);
   } catch (error) {
     throw new Error(error);
   }
@@ -11,40 +11,63 @@ exports.createOneBook = async (payload) => {
   return result;
 };
 
-exports.retriveBooks = async (limit, skip) => {
+exports.retriveSongs = async (limit, skip, artist) => {
   let skipData = (skip - 1) * limit;
   let result = [];
 
   try {
-    // result = await Model.book.find();
-    result = await Model.book.aggregate([
-      // {
-      //   $skip: skipData,
-      // },
-      // {
-      //   $limit: limit,
-      // },
+    // result = await Model.song.find();
+    const paginatedPipeline = [];
+    const matchArtist = {
+      $match: {
+        artist: { $eq: artist },
+      },
+    };
+    if (artist) {
+      console.log('artist', artist);
+      paginatedPipeline.push(matchArtist);
+    }
+    paginatedPipeline.push({
+      $skip: skipData,
+    });
+    paginatedPipeline.push({
+      $limit: limit,
+    });
+    paginatedPipeline.push({
+      $lookup: {
+        from: 'playlists',
+        localField: 'playlist',
+        foreignField: '_id',
+        as: 'playlist',
+      },
+    });
+
+    // console.log('paginatedPipeline', paginatedPipeline);
+
+    result = await Model.song.aggregate([
       {
         $facet: {
-          paginated_book: [
-            {
-              $skip: skipData,
-            },
-            {
-              $limit: limit,
-            },
-          ],
-          group_by_author: [
-            {
-              $skip: skipData,
-            },
-            {
-              $limit: limit,
-            },
+          paginated_song: paginatedPipeline,
+          meta_data: [
+            ...paginatedPipeline,
             {
               $group: {
-                _id: '$author',
-                books: { $push: '$$ROOT' },
+                _id: null,
+                total_songs: { $sum: 1 },
+              },
+            },
+          ],
+          group_by_artist: [
+            ...paginatedPipeline,
+            {
+              $group: {
+                _id: '$artist',
+                songs: { $push: '$$ROOT' },
+              },
+            },
+            {
+              $sort: {
+                _id: 1,
               },
             },
           ],
@@ -61,7 +84,7 @@ exports.retriveBooks = async (limit, skip) => {
 exports.retriveBooksGroupByAuthor = async () => {
   let result = [];
   try {
-    result = await Model.book.aggregate([
+    result = await Model.song.aggregate([
       {
         $group: {
           _id: '$author',
@@ -86,7 +109,7 @@ exports.retriveBooksGroupByAuthor = async () => {
 exports.retriveBooksFacet = async () => {
   let result = [];
   try {
-    result = await Model.book.aggregate([
+    result = await Model.song.aggregate([
       {
         $facet: {
           group_by_author: [
@@ -125,7 +148,7 @@ exports.retriveBooksFacet = async () => {
 exports.retriveBooksAggregate = async (authorFirstName = 'Hasanudin', sortBy = 1) => {
   let result = [];
   try {
-    result = await Model.book.aggregate([
+    result = await Model.song.aggregate([
       {
         $match: {
           'author.first_name': authorFirstName,
@@ -169,10 +192,10 @@ exports.retriveBooksAggregate = async (authorFirstName = 'Hasanudin', sortBy = 1
   return result;
 };
 
-exports.retriveBookById = async (bookId) => {
+exports.retriveSongById = async (bookId) => {
   let result = null;
   try {
-    result = await Model.book.findOne({ _id: bookId });
+    result = await Model.song.findOne({ _id: bookId });
   } catch (error) {
     throw new Error(error);
   }
@@ -180,12 +203,13 @@ exports.retriveBookById = async (bookId) => {
   return result;
 };
 
-exports.updateBook = async (bookId, payload) => {
+exports.updateSong = async (songId, payload, options) => {
   let result = null;
   try {
-    result = await Model.book.findOneAndUpdate({ _id: bookId }, payload, {
+    result = await Model.song.findOneAndUpdate({ _id: songId }, payload, {
       new: true,
       runValidators: true,
+      ...options,
     });
   } catch (error) {
     throw new Error(error);
@@ -194,11 +218,11 @@ exports.updateBook = async (bookId, payload) => {
   return result;
 };
 
-exports.deleteBookById = async (bookId) => {
+exports.deleteSongById = async (songId) => {
   let result = null;
   try {
-    // result = await Model.book.deleteOne({ _id: bookId });
-    result = await Model.book.findOneAndDelete({ _id: bookId });
+    // result = await Model.song.deleteOne({ _id: songId });
+    result = await Model.song.findOneAndDelete({ _id: songId });
     if (!result) {
       throw new Error('no data to delete');
     }

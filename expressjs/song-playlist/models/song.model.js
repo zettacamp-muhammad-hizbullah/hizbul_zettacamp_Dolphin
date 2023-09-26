@@ -1,36 +1,34 @@
 module.exports = (mongoose) => {
-  const bookSchema = mongoose.Schema(
+  const songSchema = mongoose.Schema(
     {
       title: { type: String, required: true },
-      price: {
-        type: Number,
+      artist: {
+        type: String,
         required: true,
       },
-      stock: {
+      duration: {
         type: Number,
         default: 0,
-      },
-      author: {
-        first_name: {
-          type: String
-        },
-        last_name: {
-          type: String
-        },
+        required: true,
       },
       genre: [{ type: String }],
+      playlist: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Playlist',
+        default: null,
+      },
     },
     {
       timestamps: true,
     }
   );
 
-  //   bookSchema.method('toJSON', function () {
+  //   songSchema.method('toJSON', function () {
   //     const { __v, createdAt, updatedAt, ...object } = this.toObject();
   //     // object.id = _id;
   //     return object;
   //   });
 
-  const Book = mongoose.model('Book', bookSchema);
-  return Book;
+  const Song = mongoose.model('Song', songSchema);
+  return Song;
 };
