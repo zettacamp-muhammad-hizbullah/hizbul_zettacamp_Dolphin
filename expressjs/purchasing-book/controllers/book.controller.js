@@ -1,6 +1,6 @@
 const bookService = require('../services/book.service');
 
-exports.storeBook = async (req, res) => {
+exports.storeBook = async (req, _) => {
   try {
     const reqBody = req?.body;
 
@@ -32,7 +32,9 @@ exports.storeBook = async (req, res) => {
   }
 };
 
-exports.getBooks = async (page = 1, perPage = 10) => {
+exports.getBooks = async (req, _) => {
+  let page = req?.query?.page ?? 1;
+  let perPage = req?.query?.perPage ?? 10;
   console.log('page', page);
   console.log('perPage', perPage);
   try {
@@ -109,7 +111,7 @@ exports.getBooksAggregateGroup = async (req, res) => {
   }
 };
 
-exports.getBookById = async (req, res) => {
+exports.getBookById = async (req, _) => {
   try {
     const bookId = req?.params?.id;
     console.log(bookId);
@@ -144,7 +146,7 @@ exports.getBookById = async (req, res) => {
   }
 };
 
-exports.updateBookById = async (req, res) => {
+exports.updateBookById = async (req, _) => {
   try {
     const reqBody = req?.body;
     const bookId = req?.params?.id;
@@ -186,7 +188,7 @@ exports.updateBookById = async (req, res) => {
   }
 };
 
-exports.deleteBookById = async (req, res) => {
+exports.deleteBookById = async (req, _) => {
   try {
     const bookId = req?.params?.id;
     const result = await bookService.deleteBookById(bookId);
