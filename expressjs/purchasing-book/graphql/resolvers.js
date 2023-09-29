@@ -7,12 +7,25 @@ module.exports = {
     purchaseBook: (_, args) => {
       return bookPurchaseController.purchaseBook({ body: args });
     },
+    updateBookById: (_, args) => {
+      console.log(args);
+      return bookController.updateBookById({ params: { id: args.book_id }, body: args.book_request });
+    },
+    createBook: (_, args) => {
+      return bookController.storeBook({ body: args.book_request });
+    },
+    deleteBookById: (_, args) => {
+      return bookController.deleteBookById({ params: { id: args.book_id } });
+    },
   },
   Query: {
     // BOOK
     getBooks: (_, { page, perPage }) => {
       console.log('gql', page, perPage);
       return bookController.getBooks(page, perPage);
+    },
+    getBook: (_, { bookId }) => {
+      return bookController.getBookById({ params: { id: bookId } });
     },
 
     // createArticle: async ({ title, content, writer }) => ArticleController.create({ title, content, writer }),
