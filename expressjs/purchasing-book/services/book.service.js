@@ -14,42 +14,42 @@ exports.createOneBook = async (payload) => {
 exports.retriveBooks = async (limit, skip) => {
   let skipData = (skip - 1) * limit;
   let result = [];
-
+  console.log('limit', limit);
   try {
     // result = await Model.book.find();
     result = await Model.book.aggregate([
-      // {
-      //   $skip: skipData,
-      // },
-      // {
-      //   $limit: limit,
-      // },
       {
-        $facet: {
-          paginated_book: [
-            {
-              $skip: skipData,
-            },
-            {
-              $limit: limit,
-            },
-          ],
-          group_by_author: [
-            {
-              $skip: skipData,
-            },
-            {
-              $limit: limit,
-            },
-            {
-              $group: {
-                _id: '$author',
-                books: { $push: '$$ROOT' },
-              },
-            },
-          ],
-        },
+        $skip: skipData,
       },
+      {
+        $limit: limit,
+      },
+      // {
+      //   $facet: {
+      //     paginated_book: [
+      //       {
+      //         $skip: skipData,
+      //       },
+      //       {
+      //         $limit: limit,
+      //       },
+      //     ],
+      //     group_by_author: [
+      //       {
+      //         $skip: skipData,
+      //       },
+      //       {
+      //         $limit: limit,
+      //       },
+      //       {
+      //         $group: {
+      //           _id: '$author',
+      //           books: { $push: '$$ROOT' },
+      //         },
+      //       },
+      //     ],
+      //   },
+      // },
     ]);
   } catch (error) {
     throw new Error(error);

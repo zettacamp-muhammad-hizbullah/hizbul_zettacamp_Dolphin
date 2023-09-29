@@ -6,16 +6,20 @@ module.exports = (mongoose) => {
         type: Number,
         required: true,
       },
+      is_for_sell: {
+        type: Boolean,
+        default: true,
+      },
       stock: {
         type: Number,
         default: 0,
       },
       author: {
         first_name: {
-          type: String
+          type: String,
         },
         last_name: {
-          type: String
+          type: String,
         },
       },
       genre: [{ type: String }],

@@ -27,32 +27,21 @@ exports.storeBook = async (req, res) => {
   }
 };
 
-exports.getBooks = async (req, res) => {
+exports.getBooks = async (page = 1, perPage = 10) => {
+  console.log('page', page);
+  console.log('perPage', perPage);
   try {
-    let perPage = req?.query?.perPage || 10;
-    let page = req?.query?.page || 1;
-
     if (perPage < 1) {
       perPage = 1;
     }
     if (page < 1) {
       page = 1;
     }
-
+    // throw new Error('gak ada data');
     const result = await bookService.retriveBooks(Number(perPage), Number(page));
-    res.json({
-      success: true,
-      data: result,
-      message: 'books data retrived',
-      errors: null,
-    });
+    return result;
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    return error;
   }
 };
 

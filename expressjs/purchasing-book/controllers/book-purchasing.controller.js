@@ -2,7 +2,7 @@ const bookPurchasingService = require('../services/book-purchasing.service');
 const bookService = require('../services/book.service');
 const { distincTermAmountAsArray, mapTermPaymentDateAsKey, handleTermToPay } = require('../utils/index.util');
 
-exports.purchaseBook = async (req, res) => {
+exports.purchaseBook = async (req) => {
   try {
     const reqBody = req?.body;
 
@@ -46,7 +46,7 @@ exports.purchaseBook = async (req, res) => {
       total_price: result?.totalPrice,
       book_qty: result?.quantityToBuy,
     };
-
+    return finalResult;
     // const resultTerms = distincTermAmountAsArray(result?.termPayments);
     // const { resultObjectMap: resultListTermsMapDate, rawMapTerm } = mapTermPaymentDateAsKey(result?.termPayments);
     // const resultTargetTermToPay = handleTermToPay(rawMapTerm, targetDate);
@@ -59,18 +59,19 @@ exports.purchaseBook = async (req, res) => {
     //   term_to_pay: resultTargetTermToPay,
     // };
 
-    res.json({
-      success: true,
-      data: finalResult,
-      message: message,
-      errors: null,
-    });
+    // res.json({
+    //   success: true,
+    //   data: finalResult,
+    //   message: message,
+    //   errors: null,
+    // });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    return error;
+    // res.status(500).json({
+    //   success: false,
+    //   data: null,
+    //   message: error?.message || 'something went wrong',
+    //   errors: error,
+    // });
   }
 };

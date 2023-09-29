@@ -66,10 +66,11 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
     console.log(`${idx + 1} - [${duePayment.date}]  >>    ${duePayment.amount}`);
     totalPriceInTerm += duePayment.amount;
   });
-
+  console.log('targetTerm', targetTerm);
   if (targetTerm) {
     // handle not exist index
     if (duePayments[targetTerm - 1] !== undefined) {
+      console.log('additionalPrice', additionalPrice);
       if (additionalPrice >= 0) {
         isTermExist = true;
         duePayments[targetTerm - 1].amount += additionalPrice;
@@ -88,6 +89,7 @@ exports.handleDueDateCreditTerm = async (totalPrice, lengthOfMonth, targetTerm =
   console.log('total price in term', totalPriceInTerm);
   console.log('totalPrice', totalPrice);
   console.log('total price === total price in term ?', totalPriceInTerm === totalPrice);
+  console.log('isTermExist', isTermExist);
   return { duePayments, message, isTermExist };
 };
 

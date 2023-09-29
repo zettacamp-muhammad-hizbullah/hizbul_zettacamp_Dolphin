@@ -16,7 +16,7 @@ exports.bookPurchasing = async (
   let message = '';
   let errors = [];
   let quantityToBuy = 0;
-
+  console.log('targetTermToAddAdditionalPrice', targetTermToAddAdditionalPrice);
   isNaN(amountOfStock) ? (amountOfStock = 10) : (amountOfStock = amountOfStock);
   isNaN(amountOfPurchasedBook) ? (amountOfPurchasedBook = 1) : (amountOfPurchasedBook = amountOfPurchasedBook);
 
@@ -105,7 +105,7 @@ exports.bookPurchasing = async (
   let newStock = amountOfStock - amountOfPurchasedBook;
 
   const updatedBook = await bookService.updateBook(bookDetail?._id, {
-    stock: newStock > 1 ? newStock : 0,
+    stock: newStock >= 1 ? newStock : 0,
   });
 
   if (!updatedBook) {
