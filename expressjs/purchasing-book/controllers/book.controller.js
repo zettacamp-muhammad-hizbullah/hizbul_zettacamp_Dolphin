@@ -114,9 +114,9 @@ exports.getBooksAggregateGroup = async (req, res) => {
 exports.getBookById = async (req, _) => {
   try {
     const bookId = req?.params?.id;
-    console.log(bookId);
+    // console.log(bookId);
     const result = await bookService.retriveBookById(bookId);
-    console.log(result);
+    // console.log(result);
     if (result) {
       return result;
       // res.json({

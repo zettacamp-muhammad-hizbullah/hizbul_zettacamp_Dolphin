@@ -9,7 +9,7 @@ module.exports = async (rawToken) => {
     // if (publicOperation.includes(req.body.operationName)) {
     //     return next()
     // }
-    if (!rawToken) throw new ApolloError('unauthenticated');
+    if (!rawToken) throw new ApolloError('unauthenticated', 'UN_AUTHENTICATED');
 
     const token = getToken(rawToken);
     // console.log(token);
@@ -18,10 +18,10 @@ module.exports = async (rawToken) => {
     console.log('decodedPayload', decodedPayload);
 
     if (!decodedPayload) {
-      throw new ApolloError('unauthenticated');
+      throw new ApolloError('unauthenticated', 'UN_AUTHENTICATED');
     }
     return decodedPayload;
   } catch (error) {
-    throw new ApolloError('unauthenticated');
+    throw new ApolloError('unauthenticated', 'UN_AUTHENTICATED');
   }
 };

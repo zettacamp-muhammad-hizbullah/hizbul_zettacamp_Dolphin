@@ -8,7 +8,7 @@ const bookShelfService = require('../services/book-shelf.service');
 const book_shelf = async (book, {}, ctx) => {
   try {
     const result = await ctx.loaders.bookShelfLoader.load(book?.book_shelf_id);
-    console.log('result', result);
+    // console.log('result', result);
     return result;
   } catch (error) {
     console.log(error);
@@ -17,8 +17,8 @@ const book_shelf = async (book, {}, ctx) => {
 };
 
 const books = async (bookShelf, {}, ctx) => {
-  console.log('parent', bookShelf);
-  console.log('parent book_ids', bookShelf.book_ids );
+  // console.log('parent', bookShelf);
+  // console.log('parent book_ids', bookShelf.book_ids );
   try {
     const result = await ctx.loaders.bookLoader.loadMany(bookShelf?.book_ids);
     return result;
@@ -56,7 +56,7 @@ module.exports = {
       return bookController.getBooks({ query: args });
     },
     getBook: (_, { bookId }, ctx) => {
-      console.log('ctx', ctx);
+      // console.log('ctx', ctx);
       const result = bookController.getBookById({ params: { id: bookId } });
       return result;
       // // using loader

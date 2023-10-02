@@ -184,7 +184,7 @@ exports.retriveBookById = async (bookId) => {
   let result = null;
   try {
     result = await Model.book.findOne({ _id: bookId });
-    console.log(result);
+    // console.log(result);
   } catch (error) {
     throw new Error(error);
   }
