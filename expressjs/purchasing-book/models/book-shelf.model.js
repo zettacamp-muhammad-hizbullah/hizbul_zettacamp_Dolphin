@@ -6,7 +6,7 @@ module.exports = (mongoose) => {
         required: true,
       },
       embedded_books: [{ type: mongoose.model('Book').schema }],
-      books: [
+      book_ids: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Book',

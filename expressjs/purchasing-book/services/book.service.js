@@ -11,6 +11,17 @@ exports.createOneBook = async (payload) => {
   return result;
 };
 
+exports.retriveAllBooks = async () => {
+  try {
+    // result = await Model.book.find();
+    result = await Model.book.find();
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
 exports.retriveBooks = async (limit, skip) => {
   let skipData = (skip - 1) * limit;
   let result = [];
@@ -173,6 +184,7 @@ exports.retriveBookById = async (bookId) => {
   let result = null;
   try {
     result = await Model.book.findOne({ _id: bookId });
+    console.log(result);
   } catch (error) {
     throw new Error(error);
   }

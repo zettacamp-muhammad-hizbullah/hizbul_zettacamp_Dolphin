@@ -1,3 +1,9 @@
+exports.getToken = (rawToken) => {
+  let token = rawToken.split(' ')[1];
+
+  return token;
+};
+
 exports.decodeBasicAuth = (rawEncoded) => {
   let encoded = rawEncoded.split(' ')[1];
   let decoded = Buffer.from(encoded, 'base64').toString();

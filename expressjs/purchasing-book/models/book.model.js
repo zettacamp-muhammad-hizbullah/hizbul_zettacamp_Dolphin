@@ -23,6 +23,10 @@ module.exports = (mongoose) => {
         },
       },
       genre: [{ type: String }],
+      book_shelf_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BookShelf',
+      },
     },
     {
       timestamps: true,

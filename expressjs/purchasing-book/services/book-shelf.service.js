@@ -1,10 +1,20 @@
-const mongoose = require('mongoose');
 const Model = require('../models/index.model');
 
 exports.createOneBookShelf = async (payload) => {
   let result = null;
   try {
     result = await Model.bookShelf.create(payload);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveAllBookShelves = async () => {
+  let result = [];
+  try {
+    result = await Model.bookShelf.find().populate('books');
   } catch (error) {
     throw new Error(error);
   }
@@ -54,7 +64,7 @@ exports.retriveBookShelvesAggregate = async () => {
           localField: 'books',
           foreignField: '_id',
           as: 'books_data',
-        },        
+        },
       },
     ]);
   } catch (error) {
@@ -152,10 +162,10 @@ exports.retriveBookShelvesElemMatchEmbedded = async (value) => {
   return result;
 };
 
-exports.retriveBookShelfById = async (bookId) => {
+exports.retriveBookShelfById = async (bookShelfId) => {
   let result = null;
   try {
-    result = await Model.bookShelf.findOne({ _id: bookId }).populate('books');
+    result = await Model.bookShelf.findOne({ _id: bookShelfId });
   } catch (error) {
     throw new Error(error);
   }

@@ -12,6 +12,7 @@ exports.storeBookShelf = async (req, res) => {
     };
 
     const result = await bookShelfService.createOneBookShelf(payload);
+    return result
     res.json({
       success: true,
       data: result,
@@ -19,6 +20,7 @@ exports.storeBookShelf = async (req, res) => {
       errors: null,
     });
   } catch (error) {
+    return error
     res.status(500).json({
       success: false,
       data: null,
@@ -44,6 +46,7 @@ exports.getBookShelves = async (req, res) => {
     }
 
     const result = await bookShelfService.retriveBookShelves(validatedBookId);
+    return result
     res.json({
       success: true,
       data: result,
@@ -51,6 +54,7 @@ exports.getBookShelves = async (req, res) => {
       errors: errors?.message,
     });
   } catch (error) {
+    return error
     res.status(500).json({
       success: false,
       data: null,
@@ -63,6 +67,7 @@ exports.getBookShelves = async (req, res) => {
 exports.getBookShelvesAggregate = async (_, res) => {
   try {
     const result = await bookShelfService.retriveBookShelvesAggregate();
+    return result
     res.json({
       success: true,
       data: result,
@@ -70,6 +75,7 @@ exports.getBookShelvesAggregate = async (_, res) => {
       errors: null,
     });
   } catch (error) {
+    return error
     res.status(500).json({
       success: false,
       data: null,
@@ -171,28 +177,30 @@ exports.getBookShelfById = async (req, res) => {
     const bookShelfId = req?.params?.id;
     const result = await bookShelfService.retriveBookShelfById(bookShelfId);
     if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'book shelf data retrived',
-        errors: null,
-      });
-      return;
+      // res.json({
+      //   success: true,
+      //   data: result,
+      //   message: 'book shelf data retrived',
+      //   errors: null,
+      // });
+      return result;
     }
 
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
+    return null
+    // res.status(404).json({
+    //   success: false,
+    //   data: result,
+    //   message: 'book shelf data not found',
+    //   errors: null,
+    // });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    return error
+    // res.status(500).json({
+    //   success: false,
+    //   data: null,
+    //   message: error?.message || 'something went wrong',
+    //   errors: error,
+    // });
   }
 };
 
@@ -208,28 +216,30 @@ exports.updateBookShelfById = async (req, res) => {
 
     const result = await bookShelfService.updateBookShelf(bookShelfId, payload);
     if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'book shelf data updated',
-        errors: null,
-      });
-      return;
+      // res.json({
+      //   success: true,
+      //   data: result,
+      //   message: 'book shelf data updated',
+      //   errors: null,
+      // });
+      return result;
     }
 
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
+    return null
+    // res.status(404).json({
+    //   success: false,
+    //   data: result,
+    //   message: 'book shelf data not found',
+    //   errors: null,
+    // });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    return error
+    // res.status(500).json({
+    //   success: false,
+    //   data: null,
+    //   message: error?.message || 'something went wrong',
+    //   errors: error,
+    // });
   }
 };
 

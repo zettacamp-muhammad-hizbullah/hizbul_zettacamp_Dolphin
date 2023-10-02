@@ -27,6 +27,19 @@ exports.typeDefs = gql`
     author: Author
     genre: [String]
     is_for_sell: Boolean
+    book_shelf: BookShelf
+  }
+  type BookShelf {
+    _id: ID!
+    name: String
+    books: [Book]
+  }
+  type LoginResponse {
+    token: String
+    user: User
+  }
+  type User {
+    username: String
   }
 
   input AuthorRequest {
@@ -49,8 +62,11 @@ exports.typeDefs = gql`
   type Query {
     getBooks(page: Int, perPage: Int): [Book]!
     getBook(bookId: String!): Book!
+    getBookShelf(bookShelfId: String!): BookShelf!
+    getBookShelves: [BookShelf]
   }
   type Mutation {
+    login(username: String!, password: String!): LoginResponse
     purchaseBook(
       book_id: String!
       amount: Int
@@ -66,49 +82,5 @@ exports.typeDefs = gql`
     deleteBookById(book_id: String!): Book
   }
 `;
-// getArticle(id: ID!): ArticleWithComment!,
-// getComments(page: Int, perPage: Int, filter: String, sortBy: String, search: String): Comments!,
-// getComment(id: ID!): CommentWithArticle!,
 
-// type ArticleWithComment {
-//     _id: ID!,
-//     title: String!,
-//     content: String!,
-//     writer: String!,
-//     comments: [Comment!]!
-// }
-// type Article {
-//     _id: ID!,
-//     title: String!,
-//     content: String!,
-//     writer: String!,
-// }
-// type Articles {
-//     data: [Article]!,
-//     pageInfo: PageInfo!
-// }
-// type CommentWithArticle {
-//     _id: ID!,
-//     name: String!,
-//     comment: String!,
-//     article: Article
-// }
-// type Comment {
-//     _id: ID!,
-//     name: String!,
-//     comment: String!,
-// }
-// type Comments {
-//     data: [Comment]!,
-//     pageInfo: PageInfo!
-// }
-
-// type Mutation {
-//     createArticle(title: String!, content: String!, writer: String!): Article!,
-//     updateArticle(id: ID!, title: String, content: String, writer: String): Article!,
-//     deleteArticle(id: ID!): String!,
-
-//     createComment(name: String!, comment: String!, articleId: ID!): Comment!,
-//     updateComment(id: ID!, name: String, comment: String): Comment!,
-//     deleteComment(id: ID!): String!,
-// }
+exports.publicOperations = ['login'];
