@@ -54,10 +54,13 @@ module.exports = {
       // console.log('ctx', ctx);
       // console.log('info', info);
       return bookController.getBooks({ query: args });
+      // const result = ctx.loaders.bookLoader.loadMany(["6508138a4debb83278eff1a8"]);
+      // return result
     },
     getBook: (_, { bookId }, ctx) => {
       // console.log('ctx', ctx);
-      const result = bookController.getBookById({ params: { id: bookId } });
+      // const result = bookController.getBookById({ params: { id: bookId } });
+      const result = ctx.loaders.bookLoader.load(bookId);
       return result;
       // // using loader
       // return bookLoader.getBookByIdLoader.load(bookId);
