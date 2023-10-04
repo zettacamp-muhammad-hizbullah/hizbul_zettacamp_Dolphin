@@ -12,8 +12,8 @@ exports.createOneBook = async (payload) => {
 };
 
 exports.retriveAllBooks = async () => {
+  let result;
   try {
-    // result = await Model.book.find();
     result = await Model.book.find();
   } catch (error) {
     throw new Error(error);
@@ -25,7 +25,7 @@ exports.retriveAllBooks = async () => {
 exports.retriveBooks = async (limit, skip) => {
   let skipData = (skip - 1) * limit;
   let result = [];
-  console.log('limit', limit);
+
   try {
     // result = await Model.book.find();
     result = await Model.book.aggregate([
@@ -35,32 +35,6 @@ exports.retriveBooks = async (limit, skip) => {
       {
         $limit: limit,
       },
-      // {
-      //   $facet: {
-      //     paginated_book: [
-      //       {
-      //         $skip: skipData,
-      //       },
-      //       {
-      //         $limit: limit,
-      //       },
-      //     ],
-      //     group_by_author: [
-      //       {
-      //         $skip: skipData,
-      //       },
-      //       {
-      //         $limit: limit,
-      //       },
-      //       {
-      //         $group: {
-      //           _id: '$author',
-      //           books: { $push: '$$ROOT' },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // },
     ]);
   } catch (error) {
     throw new Error(error);
@@ -120,11 +94,6 @@ exports.retriveBooksFacet = async () => {
           ],
         },
       },
-      // {
-      //   $sort: {
-      //     price: sortBy,
-      //   },
-      // },
     ]);
   } catch (error) {
     throw new Error(error);
@@ -181,15 +150,13 @@ exports.retriveBooksAggregate = async (authorFirstName = 'Hasanudin', sortBy = 1
 };
 
 exports.retriveBookById = async (bookId) => {
-  let result = null;
   try {
+    let result = null;
     result = await Model.book.findOne({ _id: bookId });
-    // console.log(result);
+    return result;
   } catch (error) {
     throw new Error(error);
   }
-
-  return result;
 };
 
 exports.updateBook = async (bookId, payload) => {
@@ -209,7 +176,6 @@ exports.updateBook = async (bookId, payload) => {
 exports.deleteBookById = async (bookId) => {
   let result = null;
   try {
-    // result = await Model.book.deleteOne({ _id: bookId });
     result = await Model.book.findOneAndDelete({ _id: bookId });
     if (!result) {
       throw new Error('no data to delete');

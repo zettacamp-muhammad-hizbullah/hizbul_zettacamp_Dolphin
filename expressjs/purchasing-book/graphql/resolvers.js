@@ -1,26 +1,25 @@
 // const bookShelfController = require('../controllers/book-shelf.controller');
 const authController = require('../controllers/auth.controller');
 const bookController = require('../controllers/book.controller');
+const bookShelfController = require('../controllers/book-shelf.controller');
 const bookPurchaseController = require('../controllers/book-purchasing.controller');
-const bookService = require('../services/book.service');
-const bookShelfService = require('../services/book-shelf.service');
+// const bookService = require('../services/book.service');
+// const bookShelfService = require('../services/book-shelf.service');
 
-const book_shelf = async (book, {}, ctx) => {
+const book_shelf = async (book, args, context) => {
   try {
-    const result = await ctx.loaders.bookShelfLoader.load(book?.book_shelf_id);
-    // console.log('result', result);
+    const result = await context.loaders.bookShelfLoader.load(book.book_shelf_id);
     return result;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return null;
   }
 };
 
-const books = async (bookShelf, {}, ctx) => {
+const books = async (bookShelf, args, context) => {
   // console.log('parent', bookShelf);
-  // console.log('parent book_ids', bookShelf.book_ids );
   try {
-    const result = await ctx.loaders.bookLoader.loadMany(bookShelf?.book_ids);
+    const result = await context.loaders.bookLoader.loadMany(bookShelf.book_ids);
     return result;
   } catch (error) {
     console.log(error);
@@ -30,47 +29,28 @@ const books = async (bookShelf, {}, ctx) => {
 
 module.exports = {
   Mutation: {
-    login: (_, args) => {
-      return authController.login({ body: args });
-    },
-    purchaseBook: (_, args) => {
-      return bookPurchaseController.purchaseBook({ body: args });
-    },
-    updateBookById: (_, args) => {
-      console.log(args);
-      return bookController.updateBookById({ params: { id: args.book_id }, body: args.book_request });
-    },
-    createBook: (_, args) => {
-      return bookController.storeBook({ body: args.book_request });
-    },
-    deleteBookById: (_, args) => {
-      return bookController.deleteBookById({ params: { id: args.book_id } });
-    },
+    // AUTH
+    login: authController.login,
+
+    // BOOK
+    purchaseBook: bookPurchaseController.purchaseBook,
+    updateBookById: bookController.updateBookById,
+    createBook: bookController.storeBook,
+    deleteBookById: bookController.deleteBookById,
+
+    // BOOK SHELF
+    updateBookShelfById: bookShelfController.updateBookShelfById,
+    createBookShelf: bookShelfController.storeBookShelf,
+    deleteBookShelf: bookShelfController.deleteBookShelfById,
   },
   Query: {
     // BOOK
-    getBooks: (parent, args, ctx, info) => {
-      // console.log('parent', parent);
-      // console.log('ctx', ctx);
-      // console.log('info', info);
-      return bookController.getBooks({ query: args });
-      // const result = ctx.loaders.bookLoader.loadMany(["6508138a4debb83278eff1a8"]);
-      // return result
-    },
-    getBook: (_, { bookId }, ctx) => {
-      // console.log('ctx', ctx);
-      // const result = bookController.getBookById({ params: { id: bookId } });
-      const result = ctx.loaders.bookLoader.load(bookId);
-      return result;
-      // // using loader
-      // return bookLoader.getBookByIdLoader.load(bookId);
-    },
-    getBookShelf: (_, { bookShelfId }) => {
-      return bookShelfService.retriveBookShelfById(bookShelfId);
-    },
-    getBookShelves: (_, {}) => {
-      return bookShelfService.retriveAllBookShelves();
-    },
+    getAllBooks: bookController.getAllBooks,
+    getOneBook: bookController.getBookById,
+
+    // BOOK SHELF
+    getOneBookShelf: bookShelfController.getBookShelfById,
+    getAllBookShelves: bookShelfController.getBookShelves,
   },
   Book: {
     book_shelf,

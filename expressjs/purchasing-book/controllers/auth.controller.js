@@ -1,17 +1,22 @@
-const { generateToken } = require("../services/auth.service");
+const { ApolloError } = require('apollo-server-express');
+const { generateToken } = require('../services/auth.service');
 
-exports.login = async (req, res) => {
-  const reqBody = req?.body;
-  const { username, password } = reqBody;
+exports.login = async (_, args) => {
+  try {
+    const reqBody = args;
+    const { username } = reqBody;
 
-  const payload = {
-    username,
-  };
-  const result = await generateToken(payload);
-  return {
-    token: result,
-    user: {
+    const payload = {
       username,
-    },
-  };
+    };
+    const result = await generateToken(payload);
+    return {
+      token: result,
+      user: {
+        username,
+      },
+    };
+  } catch (error) {
+    throw new ApolloError('SOMETHING WRONG');
+  }
 };

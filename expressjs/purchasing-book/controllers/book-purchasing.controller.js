@@ -1,26 +1,30 @@
+const authMiddleware = require('../middlewares/auth.middleware');
 const bookPurchasingService = require('../services/book-purchasing.service');
 const bookService = require('../services/book.service');
-const { distincTermAmountAsArray, mapTermPaymentDateAsKey, handleTermToPay } = require('../utils/index.util');
+// const { distincTermAmountAsArray, mapTermPaymentDateAsKey, handleTermToPay } = require('../utils/index.util');
+const { bookPurchaseValidator } = require('../validators/book.validator');
 
-exports.purchaseBook = async (req) => {
+exports.purchaseBook = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
+  await bookPurchaseValidator(args);
   try {
-    const reqBody = req?.body;
+    const reqBody = args;
 
-    const detailOfBook = await bookService.retriveBookById(reqBody?.book_id);
+    const detailOfBook = await bookService.retriveBookById(reqBody.book_id);
 
     let bookDetail = detailOfBook;
-    let amountOfStock = detailOfBook?.stock;
-    let amountOfPurchasedBook = reqBody?.amount;
-    let percentageDiscount = reqBody?.discount || 0;
-    let percentageTax = reqBody?.tax || 0;
-    let lengthOfMonths = reqBody?.term || 2;
-    let targetTerm = reqBody?.additional_price?.target_term || null;
-    let additionalPrice = reqBody?.additional_price?.price || 0;
-    // let targetDate = reqBody?.target_date_to_paid || null;
+    let amountOfStock = detailOfBook.stock;
+    let amountOfPurchasedBook = reqBody.amount;
+    let percentageDiscount = reqBody.discount || 0;
+    let percentageTax = reqBody.tax || 0;
+    let lengthOfMonths = reqBody.term || 2;
+    let targetTerm = reqBody.additional_price.target_term || null;
+    let additionalPrice = reqBody.additional_price.price || 0;
+    // let targetDate = reqBody.target_date_to_paid || null;
 
     //   handle validation request
 
-    const { result, message } = await bookPurchasingService.bookPurchasing(
+    const { result } = await bookPurchasingService.bookPurchasing(
       bookDetail,
       amountOfStock,
       amountOfPurchasedBook,
@@ -31,24 +35,24 @@ exports.purchaseBook = async (req) => {
       additionalPrice
     );
 
-    let totalDiscount = result?.amountOfDiscount * amountOfPurchasedBook;
-    let totalTax = result?.amountOfTax * amountOfPurchasedBook;
+    let totalDiscount = result.amountOfDiscount * amountOfPurchasedBook;
+    let totalTax = result.amountOfTax * amountOfPurchasedBook;
 
-    console.log(result);
+    // console.log(result);
 
     const finalResult = {
       books: bookDetail,
-      terms: result?.termPayments,
+      terms: result.termPayments,
       discount_percentage: `${percentageDiscount} %`,
       total_discount: totalDiscount,
       tax_percentage: `${percentageTax} %`,
       total_tax: totalTax,
-      total_price: result?.totalPrice,
-      book_qty: result?.quantityToBuy,
+      total_price: result.totalPrice,
+      book_qty: result.quantityToBuy,
     };
     return finalResult;
-    // const resultTerms = distincTermAmountAsArray(result?.termPayments);
-    // const { resultObjectMap: resultListTermsMapDate, rawMapTerm } = mapTermPaymentDateAsKey(result?.termPayments);
+    // const resultTerms = distincTermAmountAsArray(result.termPayments);
+    // const { resultObjectMap: resultListTermsMapDate, rawMapTerm } = mapTermPaymentDateAsKey(result.termPayments);
     // const resultTargetTermToPay = handleTermToPay(rawMapTerm, targetDate);
     // console.log('rawMapTerm', typeof rawMapTerm);
 
@@ -70,7 +74,7 @@ exports.purchaseBook = async (req) => {
     // res.status(500).json({
     //   success: false,
     //   data: null,
-    //   message: error?.message || 'something went wrong',
+    //   message: error.message || 'something went wrong',
     //   errors: error,
     // });
   }

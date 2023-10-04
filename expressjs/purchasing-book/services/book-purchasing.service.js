@@ -16,9 +16,13 @@ exports.bookPurchasing = async (
   let message = '';
   let errors = [];
   let quantityToBuy = 0;
-  console.log('targetTermToAddAdditionalPrice', targetTermToAddAdditionalPrice);
-  isNaN(amountOfStock) ? (amountOfStock = 10) : (amountOfStock = amountOfStock);
-  isNaN(amountOfPurchasedBook) ? (amountOfPurchasedBook = 1) : (amountOfPurchasedBook = amountOfPurchasedBook);
+  // console.log('targetTermToAddAdditionalPrice', targetTermToAddAdditionalPrice);
+  if (isNaN(amountOfStock)) {
+    amountOfStock = 10;
+  }
+  if (isNaN(amountOfPurchasedBook)) {
+    amountOfPurchasedBook = 1;
+  }
 
   const validationMessages = await bookValidator.validator(
     amountOfStock,
@@ -81,7 +85,7 @@ exports.bookPurchasing = async (
   totalPrice = Math.ceil(totalPrice);
 
   const finalStock = amountOfStock - amountOfPurchasedBook;
-  finalStock > 0 ? (message += `You can purchase ${finalStock} item again.`) : (message += ` Book can't purchased again.`);
+  finalStock > 0 ? (message += `You can purchase ${finalStock} item again.`) : (message += ' Book can not purchased again.');
 
   const {
     duePayments: termPayments,
@@ -104,12 +108,12 @@ exports.bookPurchasing = async (
   // update book stock
   let newStock = amountOfStock - amountOfPurchasedBook;
 
-  const updatedBook = await bookService.updateBook(bookDetail?._id, {
+  const updatedBook = await bookService.updateBook(bookDetail._id, {
     stock: newStock >= 1 ? newStock : 0,
   });
 
   if (!updatedBook) {
-    throw new Error("can not update book's stock");
+    throw new Error('can not update stock of book');
   }
 
   return { result, message };

@@ -1,331 +1,150 @@
 const mongoose = require('mongoose');
 const bookShelfService = require('../services/book-shelf.service');
 const bookService = require('../services/book.service');
+const { bookShelfCreateValidator, bookShelfUpdateValidator, bookShelfAddBookValidator } = require('../validators/book-shelf.validator');
+const authMiddleware = require('../middlewares/auth.middleware');
+const { ApolloError } = require('apollo-server-express');
+const model = require('../models/index.model');
 
-exports.storeBookShelf = async (req, res) => {
+exports.storeBookShelf = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
+  await bookShelfCreateValidator(args);
+
+  // const hahai = 'haha';
+
   try {
-    const reqBody = req?.body;
+    const reqBody = args.book_shelf_request || null;
 
-    const payload = {
-      name: reqBody?.name,
-      books: reqBody?.books,
+    let payload = {
+      name: reqBody.name,
     };
 
+    const bookIds = [];
+
+    // sanity check
+    if (reqBody && reqBody.book_ids && reqBody.book_ids.length > 0) {
+      for (let i = 0; i < reqBody.book_ids.length; i++) {
+        console.log('mongoose.Types.ObjectId(reqBody?.book_ids[i]', mongoose.Types.ObjectId(reqBody.book_ids[i]));
+        if (mongoose.Types.ObjectId(reqBody.book_ids[i])) {
+          const book = await bookService.retriveBookById(reqBody.book_ids[i]);
+          if (book) {
+            bookIds.push(book._id);
+          }
+        }
+      }
+    }
+
+    payload.book_ids = bookIds;
+
     const result = await bookShelfService.createOneBookShelf(payload);
-    return result
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf stored successfully',
-      errors: null,
-    });
+
+    // sanity check
+    if (bookIds && bookIds.length > 0) {
+      for (let i = 0; i < bookIds.length; i++) {
+        await await model.book.findOneAndUpdate(
+          { _id: bookIds[i] },
+          {
+            book_shelf_id: result._id,
+          }
+        );
+      }
+    }
+    return result;
   } catch (error) {
-    return error
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    throw new ApolloError(error);
   }
 };
 
-exports.getBookShelves = async (req, res) => {
+exports.getBookShelves = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
   try {
-    const { bookId } = req?.query;
+    const { book_id } = args;
     let validatedBookId = null;
-    let errors = null;
 
-    if (bookId) {
+    if (book_id) {
       try {
-        validatedBookId = mongoose.Types.ObjectId(bookId);
+        validatedBookId = mongoose.Types.ObjectId(book_id);
       } catch (error) {
-        errors = error;
         validatedBookId = null;
       }
     }
 
     const result = await bookShelfService.retriveBookShelves(validatedBookId);
-    return result
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf data retrived',
-      errors: errors?.message,
-    });
+    return result;
   } catch (error) {
-    return error
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    throw new ApolloError(error);
   }
 };
 
-exports.getBookShelvesAggregate = async (_, res) => {
+exports.getBookShelfById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
   try {
-    const result = await bookShelfService.retriveBookShelvesAggregate();
-    return result
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf data retrived',
-      errors: null,
-    });
-  } catch (error) {
-    return error
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.getBookShelvesElemMatch = async (req, res) => {
-  try {
-    const genre = req?.params?.genre;
-    // let validBookId = mongoose.Types.ObjectId(bookId);
-    let errors = null;
-
-    const result = await bookShelfService.retriveBookShelvesElemMatch(genre);
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf data retrived',
-      errors: errors?.message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.getBookShelvesElemMatchEmbedded = async (req, res) => {
-  try {
-    const genre = req?.params?.genre;
-    let errors = null;
-
-    const result = await bookShelfService.retriveBookShelvesElemMatchEmbedded(genre);
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf data retrived',
-      errors: errors?.message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.getBookShelvesGenreDistinct = async (req, res) => {
-  try {
-    let errors = null;
-
-    const result = await bookShelfService.retriveBookShelvesGenreDistinct();
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf genre distinct data retrived',
-      errors: errors?.message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.getBookShelvesGenreDistinctEmbedded = async (req, res) => {
-  try {
-    let errors = null;
-
-    const result = await bookShelfService.retriveBookShelvesGenreDistinctEmbedded();
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf genre distinct data retrived',
-      errors: errors?.message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.getBookShelfById = async (req, res) => {
-  try {
-    const bookShelfId = req?.params?.id;
+    const bookShelfId = args.book_shelf_id;
     const result = await bookShelfService.retriveBookShelfById(bookShelfId);
-    if (result) {
-      // res.json({
-      //   success: true,
-      //   data: result,
-      //   message: 'book shelf data retrived',
-      //   errors: null,
-      // });
-      return result;
-    }
-
-    return null
-    // res.status(404).json({
-    //   success: false,
-    //   data: result,
-    //   message: 'book shelf data not found',
-    //   errors: null,
-    // });
+    // aku = "ada apa"
+    return result;
   } catch (error) {
-    return error
-    // res.status(500).json({
-    //   success: false,
-    //   data: null,
-    //   message: error?.message || 'something went wrong',
-    //   errors: error,
-    // });
+    throw new ApolloError(error);
   }
 };
 
-exports.updateBookShelfById = async (req, res) => {
+exports.updateBookShelfById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
+  await bookShelfUpdateValidator(args);
   try {
-    const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
-
-    const payload = {
-      name: reqBody?.name,
-      books: reqBody?.books,
+    const reqBody = args.book_shelf_request;
+    const bookShelfId = args.book_shelf_id;
+    let payload = {
+      name: reqBody.name,
     };
+    const bookIds = [];
 
+    // sanity check
+    if (reqBody.book_ids && reqBody.book_ids.length > 0) {
+      for (let i = 0; i < reqBody.book_ids.length; i++) {
+        console.log('mongoose.Types.ObjectId(reqBody?.book_ids[i]', mongoose.Types.ObjectId(reqBody.book_ids[i]));
+        if (mongoose.Types.ObjectId(reqBody.book_ids[i])) {
+          const book = await bookService.retriveBookById(reqBody.book_ids[i]);
+          if (book) {
+            bookIds.push(book._id);
+          }
+        }
+      }
+    }
+    payload.book_ids = bookIds;
     const result = await bookShelfService.updateBookShelf(bookShelfId, payload);
-    if (result) {
-      // res.json({
-      //   success: true,
-      //   data: result,
-      //   message: 'book shelf data updated',
-      //   errors: null,
-      // });
-      return result;
+
+    if (bookIds && bookIds.length > 0) {
+      for (let i = 0; i < bookIds.length; i++) {
+        await await model.book.findOneAndUpdate(
+          { _id: bookIds[i] },
+          {
+            book_shelf_id: result._id,
+          }
+        );
+      }
     }
 
-    return null
-    // res.status(404).json({
-    //   success: false,
-    //   data: result,
-    //   message: 'book shelf data not found',
-    //   errors: null,
-    // });
+    return result;
   } catch (error) {
-    return error
-    // res.status(500).json({
-    //   success: false,
-    //   data: null,
-    //   message: error?.message || 'something went wrong',
-    //   errors: error,
-    // });
+    throw new ApolloError(error);
   }
 };
 
-exports.updateBookShelfByIdArrayFilter = async (req, res) => {
+exports.addBooksToBookShelfById = async (parent, args) => {
+  await bookShelfAddBookValidator(args);
   try {
-    const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
-
-    const bookId = reqBody?.book_id;
-    const newBookId = reqBody?.new_book_id;
-
-    const result = await bookShelfService.updateBookShelfArrayFilter(bookShelfId, bookId, newBookId);
-    if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'book shelf data updated',
-        errors: null,
-      });
-      return;
-    }
-
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.updateBookShelfByIdArrayFilterEmbedded = async (req, res) => {
-  try {
-    const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
-
-    const bookId = reqBody?.book_id;
-    const newStock = reqBody?.new_stock;
-
-    const result = await bookShelfService.updateBookShelfArrayFilterEmbedded(bookShelfId, bookId, newStock);
-    if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'book shelf data updated',
-        errors: null,
-      });
-      return;
-    }
-
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.addBooksToBookShelfById = async (req, res) => {
-  try {
-    const reqBody = req?.body;
-    const bookShelfId = req?.params?.id;
+    const reqBody = args;
+    const bookShelfId = args.book_shelf_id;
     let errors = [];
 
     const payload = {
-      books: reqBody?.books,
+      book_ids: reqBody.book_ids,
     };
 
-    const books = [];
+    const bookIds = [];
 
-    for (const bookId of payload.books) {
+    for (const bookId of payload.book_ids) {
       let validBookId = null;
       let book = null;
 
@@ -338,88 +157,27 @@ exports.addBooksToBookShelfById = async (req, res) => {
       }
 
       if (book) {
-        books.push(validBookId);
+        bookIds.push(validBookId);
       } else {
         errors.push(`${bookId} ignored, because not valid book id`);
+        throw new ApolloError(errors);
       }
     }
 
-    const result = await bookShelfService.addBooks(bookShelfId, books);
-    if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'books data in book shelf updated',
-        errors: errors.length > 0 ? errors : null,
-      });
-      return;
-    }
-
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
+    const result = await bookShelfService.addBooks(bookShelfId, bookIds);
+    return result;
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    throw new ApolloError(error);
   }
 };
 
-exports.removeBookFromBookShelfById = async (req, res) => {
+exports.deleteBookShelfById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info);
   try {
-    const bookShelfId = req?.params?.id;
-    const bookId = req?.params?.bookId;
-    let errors = [];
-
-    const result = await bookShelfService.removeBook(bookShelfId, bookId);
-    if (result) {
-      res.json({
-        success: true,
-        data: result,
-        message: 'books data in book shelf updated',
-        errors: errors.length > 0 ? errors : null,
-      });
-      return;
-    }
-
-    res.status(404).json({
-      success: false,
-      data: result,
-      message: 'book shelf data not found',
-      errors: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
-  }
-};
-
-exports.deleteBookShelfById = async (req, res) => {
-  try {
-    const bookShelfId = req?.params?.id;
+    const bookShelfId = args.book_shelf_id;
     const result = await bookShelfService.deleteBookShelfById(bookShelfId);
-    res.json({
-      success: true,
-      data: result,
-      message: 'book shelf data deleted',
-      errors: null,
-    });
+    return result;
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: error?.message || 'something went wrong',
-      errors: error,
-    });
+    throw new ApolloError(error);
   }
 };

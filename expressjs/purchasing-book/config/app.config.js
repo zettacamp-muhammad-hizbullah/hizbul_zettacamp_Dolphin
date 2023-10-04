@@ -1,1 +1,1 @@
-exports.SECRET_KEY = "$3cr3t"
+exports.SECRET_KEY = '$3cr3t';

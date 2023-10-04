@@ -23,24 +23,29 @@ exports.retriveAllBookShelves = async () => {
 };
 
 exports.retriveBookShelves = async (bookId) => {
-  let result = [];
   try {
+    let result = [];
+    let aggregateQuery = [
+      {
+        $match: {},
+      },
+    ];
+
     if (bookId) {
-      result = await Model.bookShelf
-        .find({
-          books: {
-            $in: bookId,
+      aggregateQuery = [
+        {
+          $match: {
+            book_ids: bookId,
           },
-        })
-        .populate('books');
-    } else {
-      result = await Model.bookShelf.find().populate('books');
+        },
+      ];
     }
+
+    result = await Model.bookShelf.aggregate(aggregateQuery);
+    return result;
   } catch (error) {
     throw new Error(error);
   }
-
-  return result;
 };
 
 exports.retriveBookShelvesAggregate = async () => {
@@ -80,7 +85,7 @@ exports.retriveBookShelvesGenreDistinct = async () => {
     result = await Model.bookShelf
       .find()
       .populate('books')
-      .exec(function (err, bookShelf) {});
+      .exec(function () {});
 
     // result = await Model.bookShelf.find().populate('books').distinct('books.genre');
     // result = await Model.bookShelf
@@ -142,7 +147,7 @@ exports.retriveBookShelvesElemMatch = async (value) => {
   return result;
 };
 
-exports.retriveBookShelvesElemMatchEmbedded = async (value) => {
+exports.retriveBookShelvesElemMatchEmbedded = async () => {
   let result = [];
   try {
     result = await Model.bookShelf
@@ -253,14 +258,14 @@ exports.updateBookShelfArrayFilterEmbedded = async (bookShelfId, bookId, newStoc
   return result;
 };
 
-exports.addBooks = async (bookShelfId, books) => {
+exports.addBooks = async (bookShelfId, bookIds) => {
   let result = null;
   try {
     result = await Model.bookShelf.findOneAndUpdate(
       { _id: bookShelfId },
       {
         $addToSet: {
-          books: books,
+          book_ids: bookIds,
         },
       },
       {

@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 exports.typeDefs = gql`
-  type BookPurchaseResult {
+  type BookPurchaseResponse {
     books: Book
     terms: [Term]
     discount_percentage: String
@@ -27,12 +27,18 @@ exports.typeDefs = gql`
     author: Author
     genre: [String]
     is_for_sell: Boolean
+    book_shelf_id: String
     book_shelf: BookShelf
+    created_at: String
+    updated_at: String
   }
   type BookShelf {
     _id: ID!
     name: String
+    book_ids: [String]
     books: [Book]
+    created_at: String
+    updated_at: String
   }
   type LoginResponse {
     token: String
@@ -42,28 +48,34 @@ exports.typeDefs = gql`
     username: String
   }
 
-  input AuthorRequest {
+  input AuthorInput {
     first_name: String!
     last_name: String!
   }
-  input AdditionalPrice {
+  input AdditionalPriceInput {
     target_term: Int
     price: Int
   }
-  input BookRequest {
+  input BookInput {
     title: String!
     price: Int!
     stock: Int!
     is_for_sell: Boolean
     genre: [String]
-    author: AuthorRequest
+    author: AuthorInput
+    book_shelf_id: String
+  }
+  input BookShelfInput {
+    name: String!
+    book_ids: [String]
   }
 
   type Query {
-    getBooks(page: Int, perPage: Int): [Book]!
-    getBook(bookId: String!): Book!
-    getBookShelf(bookShelfId: String!): BookShelf!
-    getBookShelves: [BookShelf]
+    getAllBooks(page: Int, per_page: Int): [Book]
+    getOneBook(book_id: String!): Book
+
+    getOneBookShelf(book_shelf_id: String!): BookShelf
+    getAllBookShelves(book_id: String): [BookShelf]
   }
   type Mutation {
     login(username: String!, password: String!): LoginResponse
@@ -74,12 +86,16 @@ exports.typeDefs = gql`
       stock: Int
       discount: Int
       tax: Int
-      additional_price: AdditionalPrice
-    ): BookPurchaseResult
+      additional_price: AdditionalPriceInput
+    ): BookPurchaseResponse
 
-    updateBookById(book_id: String!, book_request: BookRequest!): Book
-    createBook(book_request: BookRequest!): Book
+    updateBookById(book_id: String!, book_request: BookInput!): Book
+    createBook(book_request: BookInput!): Book
     deleteBookById(book_id: String!): Book
+
+    updateBookShelfById(book_shelf_id: String!, book_shelf_request: BookShelfInput!): BookShelf
+    createBookShelf(book_shelf_request: BookShelfInput!): BookShelf
+    deleteBookShelf(book_shelf_id: String!): BookShelf
   }
 `;
 

@@ -1,16 +1,21 @@
+const { ApolloError } = require('apollo-server-express');
+const authMiddleware = require('../middlewares/auth.middleware');
 const bookService = require('../services/book.service');
+const { bookCreateValidator, bookUpdateValidator } = require('../validators/book.validator');
 
-exports.storeBook = async (req, _) => {
+exports.storeBook = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info)
+  await bookCreateValidator(args);
   try {
-    const reqBody = req?.body;
+    const reqBody = args.book_request;
 
     const payload = {
-      title: reqBody?.title,
-      price: reqBody?.price,
-      stock: reqBody?.stock,
-      genre: reqBody?.genre,
-      author: reqBody?.author,
-      is_for_sell: reqBody?.is_for_sell,
+      title: reqBody.title,
+      price: reqBody.price,
+      stock: reqBody.stock,
+      genre: reqBody.genre,
+      author: reqBody.author,
+      is_for_sell: reqBody.is_for_sell,
     };
 
     const result = await bookService.createOneBook(payload);
@@ -26,18 +31,21 @@ exports.storeBook = async (req, _) => {
     // res.status(500).json({
     //   success: false,
     //   data: null,
-    //   message: error?.message || 'something went wrong',
+    //   message: error.message || 'something went wrong',
     //   errors: error,
     // });
   }
 };
 
-exports.getBooks = async (req, _) => {
-  let page = req?.query?.page ?? 1;
-  let perPage = req?.query?.perPage ?? 10;
-  console.log('page', page);
-  console.log('perPage', perPage);
+exports.getAllBooks = async (parent, args, context, info) => {  
+  await authMiddleware(parent, args, context, info)
+
   try {
+    let page = args.page || 1;
+    let perPage = args.per_page || 10;
+    console.log('page', page);
+    console.log('perPage', perPage);
+
     if (perPage < 1) {
       perPage = 1;
     }
@@ -48,14 +56,14 @@ exports.getBooks = async (req, _) => {
     const result = await bookService.retriveBooks(Number(perPage), Number(page));
     return result;
   } catch (error) {
-    return error;
+    throw new ApolloError('INTERNAL');
   }
 };
 
 exports.getBooksAggregate = async (req, res) => {
   try {
-    const authorFirstName = req?.query?.author_first_name;
-    const sortBy = req?.query?.sort_by;
+    const authorFirstName = req.query.author_first_name;
+    const sortBy = req.query.sort_by;
     const result = await bookService.retriveBooksAggregate(authorFirstName, sortBy === 'asc' ? 1 : -1);
     res.json({
       success: true,
@@ -67,7 +75,7 @@ exports.getBooksAggregate = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error?.message || 'something went wrong',
+      message: error.message || 'something went wrong',
       errors: error,
     });
   }
@@ -86,7 +94,7 @@ exports.getBooksAggregateFacet = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error?.message || 'something went wrong',
+      message: error.message || 'something went wrong',
       errors: error,
     });
   }
@@ -105,15 +113,16 @@ exports.getBooksAggregateGroup = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error?.message || 'something went wrong',
+      message: error.message || 'something went wrong',
       errors: error,
     });
   }
 };
 
-exports.getBookById = async (req, _) => {
+exports.getBookById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info)
   try {
-    const bookId = req?.params?.id;
+    const bookId = args.book_id;
     // console.log(bookId);
     const result = await bookService.retriveBookById(bookId);
     // console.log(result);
@@ -140,22 +149,24 @@ exports.getBookById = async (req, _) => {
     // res.status(500).json({
     //   success: false,
     //   data: null,
-    //   message: error?.message || 'something went wrong',
+    //   message: error.message || 'something went wrong',
     //   errors: error,
     // });
   }
 };
 
-exports.updateBookById = async (req, _) => {
+exports.updateBookById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info)
+  await bookUpdateValidator(args);
   try {
-    const reqBody = req?.body;
-    const bookId = req?.params?.id;
+    const reqBody = args.book_request;
+    const bookId = args.book_id;
     console.log('bookId', bookId);
 
     const payload = {
-      title: reqBody?.title,
-      price: reqBody?.price,
-      stock: reqBody?.stock,
+      title: reqBody.title,
+      price: reqBody.price,
+      stock: reqBody.stock,
     };
     console.log('payload', payload);
     const result = await bookService.updateBook(bookId, payload);
@@ -182,15 +193,16 @@ exports.updateBookById = async (req, _) => {
     // res.status(500).json({
     //   success: false,
     //   data: null,
-    //   message: error?.message || 'something went wrong',
+    //   message: error.message || 'something went wrong',
     //   errors: error,
     // });
   }
 };
 
-exports.deleteBookById = async (req, _) => {
+exports.deleteBookById = async (parent, args, context, info) => {
+  await authMiddleware(parent, args, context, info)
   try {
-    const bookId = req?.params?.id;
+    const bookId = args.book_id;
     const result = await bookService.deleteBookById(bookId);
     return result;
     // res.json({
@@ -204,7 +216,7 @@ exports.deleteBookById = async (req, _) => {
     // res.status(500).json({
     //   success: false,
     //   data: null,
-    //   message: error?.message || 'something went wrong',
+    //   message: error.message || 'something went wrong',
     //   errors: error,
     // });
   }

@@ -1,6 +1,14 @@
-const { storeBook, getBooks, getBooksAggregate, getBookById, updateBookById, getBooksAggregateFacet, getBooksAggregateGroup } = require("../controllers/book.controller");
-const { deleteBookById } = require("../services/book.service");
-const { bookCreateValidator, bookUpdateValidator } = require("../validators/book.validator");
+const {
+  storeBook,
+  getBooks,
+  getBooksAggregate,
+  getBookById,
+  updateBookById,
+  getBooksAggregateFacet,
+  getBooksAggregateGroup,
+} = require('../controllers/book.controller');
+const { deleteBookById } = require('../services/book.service');
+const { bookCreateValidator, bookUpdateValidator } = require('../validators/book.validator');
 
 module.exports = (app) => {
   app.post('/books', bookCreateValidator, storeBook);

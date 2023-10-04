@@ -5,7 +5,6 @@ module.exports = (mongoose) => {
         type: String,
         required: true,
       },
-      embedded_books: [{ type: mongoose.model('Book').schema }],
       book_ids: [
         {
           type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +13,10 @@ module.exports = (mongoose) => {
       ],
     },
     {
-      timestamps: true,
+      timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+      },
     }
   );
 

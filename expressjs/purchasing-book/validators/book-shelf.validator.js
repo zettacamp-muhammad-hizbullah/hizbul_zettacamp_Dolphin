@@ -1,5 +1,7 @@
+const { ApolloError } = require('apollo-server-express');
+
 exports.bookShelfCreateValidator = async (req, res, next) => {
-  const reqBody = req?.body;
+  const reqBody = req?.book_shelf_request;
   const errors = [];
 
   if (!reqBody?.name) {
@@ -7,21 +9,12 @@ exports.bookShelfCreateValidator = async (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    isPassed = false;
-    res.status(400).json({
-      success: false,
-      data: null,
-      message: 'bad request',
-      errors: errors,
-    });
-    return;
+    throw new ApolloError(errors, 'BAD_REQUEST');
   }
-
-  next();
 };
 
 exports.bookShelfUpdateValidator = async (req, res, next) => {
-  const reqBody = req?.body;
+  const reqBody = req?.book_shelf_request;
   const errors = [];
 
   if (!reqBody?.name) {
@@ -29,17 +22,8 @@ exports.bookShelfUpdateValidator = async (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    isPassed = false;
-    res.status(400).json({
-      success: false,
-      data: null,
-      message: 'bad request',
-      errors: errors,
-    });
-    return;
+    throw new ApolloError(errors, 'BAD_REQUEST');
   }
-
-  next();
 };
 
 exports.bookShelfAddBookValidator = async (req, res, next) => {
@@ -54,15 +38,6 @@ exports.bookShelfAddBookValidator = async (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    isPassed = false;
-    res.status(400).json({
-      success: false,
-      data: null,
-      message: 'bad request',
-      errors: errors,
-    });
-    return;
+    throw new ApolloError(errors, 'BAD_REQUEST');
   }
-
-  next();
 };
