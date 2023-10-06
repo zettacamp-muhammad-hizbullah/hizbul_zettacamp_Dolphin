@@ -1,45 +1,21 @@
 const moment = require('moment');
 
-function runMoment(dateValueString, dateValueObject) {
+function runMoment(dateValueString) {
   const formatDateString = 'DD-MM-YYYY';
-  if (
-    (!moment(dateValueString, formatDateString, true).isValid() && dateValueObject) ||
-    !moment(dateValueObject.date, formatDateString, true).isValid()
-  ) {
+  const formatDateTimeString = 'DD-MM-YYYY HH:mm:s';
+  if (!dateValueString && !moment(dateValueString, formatDateString, true).isValid()) {
     return 'invalid format';
   }
 
-  const currentDate = moment(dateValueString, formatDateString, true);
-  const dateTimeObject = dateValueObject;
-
-  let dateTimeString = '';
-  if (dateTimeObject && typeof dateTimeObject === 'object') {
-    if (dateTimeObject.date && moment(dateTimeObject.date, formatDateString, true).isValid()) {
-      dateTimeString += dateTimeObject.date;
-    } else {
-      return 'invalid date';
-    }
-
-    if (dateTimeObject.time) {
-      dateTimeString += ` ${dateTimeObject.time}`;
-    }
-  }
-
   return {
-    currentDate: moment(),
-    dateTimeFromString: currentDate,
-    dateTimeFromObject: moment(dateTimeString, formatDateString),
-    currentDateUTC: moment().utc(),
-    isValidDateStringInput: moment(dateValueString, formatDateString, true).isValid(),
-    validDateStringInputValue: moment(dateValueString, formatDateString, true),
+    datePlus2Hour: moment(dateValueString, formatDateString, true).add(2, 'hours').format(formatDateTimeString),
+    datePlus5Day: moment(dateValueString, formatDateString, true).add(5, 'days').format(formatDateTimeString),
+    datePlus1Week: moment(dateValueString, formatDateString, true).add(1, 'weeks').format(formatDateTimeString),
+    dateMinus5Day: moment(dateValueString, formatDateString, true).subtract(5, 'days').format(formatDateTimeString),
+    dateStartOfWeek: moment(dateValueString, formatDateString, true).startOf('week').format(formatDateTimeString),
+    dateEndOfMonth: moment(dateValueString, formatDateString, true).endOf('month').format(formatDateTimeString),
   };
 }
 
-const objectDate = {
-  date: '10-10-2022',
-  time: '17:12:02',
-};
-
-// const result = runMoment('2023-01-10', objectDate);
-const result = runMoment('10-01-2022', objectDate);
+const result = runMoment('06-01-2023');
 console.log(result);
