@@ -8,12 +8,12 @@ function runMoment(dateValueString) {
   }
 
   return {
-    datePlus2Hour: moment(dateValueString, formatDateString, true).add(2, 'hours').format(formatDateTimeString),
-    datePlus5Day: moment(dateValueString, formatDateString, true).add(5, 'days').format(formatDateTimeString),
-    datePlus1Week: moment(dateValueString, formatDateString, true).add(1, 'weeks').format(formatDateTimeString),
-    dateMinus5Day: moment(dateValueString, formatDateString, true).subtract(5, 'days').format(formatDateTimeString),
-    dateStartOfWeek: moment(dateValueString, formatDateString, true).startOf('week').format(formatDateTimeString),
-    dateEndOfMonth: moment(dateValueString, formatDateString, true).endOf('month').format(formatDateTimeString),
+    date_plus_2_hours: moment(dateValueString, formatDateString, true).add(2, 'hours').format(formatDateTimeString),
+    date_plus_5_days: moment(dateValueString, formatDateString, true).add(5, 'days').format(formatDateTimeString),
+    date_plus_1_week: moment(dateValueString, formatDateString, true).add(1, 'weeks').format(formatDateTimeString),
+    date_minus_5_days: moment(dateValueString, formatDateString, true).subtract(5, 'days').format(formatDateTimeString),
+    date_start_of_week: moment(dateValueString, formatDateString, true).startOf('week').format(formatDateTimeString),
+    date_end_of_month: moment(dateValueString, formatDateString, true).endOf('month').format(formatDateTimeString),
   };
 }
 
