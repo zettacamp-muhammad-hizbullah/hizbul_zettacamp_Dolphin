@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader');
 const playlistService = require('../../services/playlist.service');
-const Model = require('../models/index.model');
+const Model = require('../../models/index.model');
 
 exports.playlistLoader = new DataLoader(
   async (keys) => {

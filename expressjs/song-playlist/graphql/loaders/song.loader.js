@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader');
 const songService = require('../../services/song.service');
-const Model = require('../models/index.model');
+const Model = require('../../models/index.model');
 
 exports.songLoader = new DataLoader(
   async (keys) => {
