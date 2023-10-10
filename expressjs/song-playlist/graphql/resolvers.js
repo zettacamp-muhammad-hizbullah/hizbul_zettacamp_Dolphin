@@ -55,6 +55,12 @@ module.exports = {
     getAllPlaylist: playlistController.getAllPlaylist,
     getPlaylist: playlistController.getPlaylistById,    
     getPlaylistRandom: playlistController.getPlaylistsRandom,    
+
+    getAllPlaylistWithDuration: playlistController.getAllPlaylistWithDuration,
+    getOnePlaylistWithDuration: playlistController.getOnePlaylistWithDuration,
+    getPlaylistsByArtistWithDuration: playlistController.getPlaylistsByArtistWithDuration,
+    getPlaylistsByGenreWithDuration: playlistController.getPlaylistsByGenreWithDuration,
+    getPlaylistRandomWithDuration: playlistController.getPlaylistRandomWithDuration,
   },
 
   Song: {

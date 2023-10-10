@@ -1,3 +1,5 @@
+const moment = require('moment/moment');
+
 exports.getToken = (rawToken) => {
   let token = rawToken.split(' ')[1];
 
@@ -40,4 +42,16 @@ exports.baseResponse = (res, { success = true, data = null, response = { code: 2
       error: response.error,
     },
   });
+};
+
+exports.generateDurationDateTime = async (startDateTime, totalDuraionInSecond, formatDateTime) => {
+  const durationInSeconds = moment.duration(totalDuraionInSecond, 'seconds').seconds();
+  const durationInMinutes = moment.duration(totalDuraionInSecond, 'seconds').minutes();
+  const durationFormat = moment({
+    second: durationInSeconds,
+    minutes: durationInMinutes,
+  }).format('mm:ss');
+
+  const finishedDateFormat = await startDateTime.add(totalDuraionInSecond, 'second').format(formatDateTime);
+  return { finished_at: finishedDateFormat, total_duration: durationFormat };
 };

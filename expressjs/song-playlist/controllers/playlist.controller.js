@@ -1,7 +1,11 @@
+const moment = require('moment/moment');
 const authMiddleware = require('../middlewares/auth.middleware');
 const playlistService = require('../services/playlist.service');
 const songService = require('../services/song.service');
 const { ApolloError } = require('apollo-server-express');
+const { generateDurationDateTime } = require('../utils/index.util');
+
+const formatDateTime = 'dddd, DD MMMM YYYY HH:mm:ss';
 
 exports.storePlaylist = async (parent, args, ctx, info) => {
   authMiddleware(parent, args, ctx, info);
@@ -148,6 +152,177 @@ exports.deletePlaylistById = async (parent, args, ctx, info) => {
     const result = await playlistService.deletePlaylistById(playlistId);
     return result;
   } catch (error) {
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};
+
+exports.getPlaylistRandomWithDuration = async (parent, args, ctx, info) => {
+  let currentDate = moment().locale('id');
+  let finishedDate = currentDate.clone();
+  const currentDateFormat = currentDate.format(formatDateTime);
+  let maxSecond = args?.maxSecond || 3600;
+
+  try {
+    const result = await playlistService.retriveRandomPlaylists(maxSecond);
+    let totalDuration = 0;
+    await result.map((song) => {
+      totalDuration += song.duration;
+    });
+
+    const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);
+
+    return {
+      playlist_name: 'random',
+      songs: result,
+      total_duration: total_duration,
+      start_at: currentDateFormat,
+      end_at: finished_at,
+    };
+  } catch (error) {
+    console.log(error);
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};
+
+exports.getPlaylistsByGenreWithDuration = async (parent, args, ctx, info) => {
+  let currentDate = moment().locale('id');
+  let finishedDate = currentDate.clone();
+  const currentDateFormat = currentDate.format(formatDateTime);
+
+  try {
+    const songs = await playlistService.groupSongByGenre();
+
+    let result = [];
+
+    if (songs && songs.length > 0) {
+      for (let i = 0; i < songs.length; i++) {
+        let totalDuration = 0;
+        if (songs[i].songs && songs[i].songs.length > 0) {
+          await songs[i].songs.map((subSong) => {
+            totalDuration += subSong.duration;
+          });
+        }
+        // console.log("totalDuration", totalDuration);
+
+        const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);        
+
+        result.push({
+          playlist_name: songs[i]._id,
+          songs: songs[i].songs,
+          total_duration: total_duration,
+          start_at: currentDateFormat,
+          end_at: finished_at,
+        });
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};
+
+exports.getPlaylistsByArtistWithDuration = async (parent, args, ctx, info) => {
+  let currentDate = moment().locale('id');
+  let finishedDate = currentDate.clone();
+  const currentDateFormat = currentDate.format(formatDateTime);
+
+  try {
+    const songs = await playlistService.groupSongByArtist();
+
+    let result = [];
+    if (songs && songs.length > 0) {
+      for (let i = 0; i < songs.length; i++) {
+        let totalDuration = 0;
+        if (songs[i].songs && songs[i].songs.length > 0) {
+          await songs[i].songs.map((subSong) => {
+            totalDuration += subSong.duration;
+          });
+        }
+
+        const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);
+
+        result.push({
+          playlist_name: songs[i]._id,
+          songs: songs[i].songs,
+          total_duration: total_duration,
+          start_at: currentDateFormat,
+          end_at: finished_at,
+        });
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};
+
+exports.getOnePlaylistWithDuration = async (parent, args, ctx, info) => {
+  let currentDate = moment().locale('id');
+  let finishedDate = currentDate.clone();
+  const currentDateFormat = currentDate.format(formatDateTime);
+  let playlistId = args?.playlist_id || null;
+
+  try {
+    const result = await playlistService.retrivePlaylistByIdWithSongs(playlistId);
+
+    let totalDuration = 0;
+    if (result.songs && result.songs.length > 0) {
+      await result.songs.map((song) => {
+        totalDuration += song.duration;
+      });
+    }
+
+    const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);
+
+    return {
+      playlist_name: result.name,
+      songs: result.songs,
+      total_duration: total_duration,
+      start_at: currentDateFormat,
+      end_at: finished_at,
+    };
+  } catch (error) {
+    console.log(error);
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};
+
+exports.getAllPlaylistWithDuration = async (parent, args, ctx, info) => {
+  let currentDate = moment().locale('id');
+  let finishedDate = currentDate.clone();
+  const currentDateFormat = currentDate.format(formatDateTime);
+
+  try {
+    const playlists = await playlistService.retriveAllPlaylistSongs();
+
+    let result = [];
+    if (playlists && playlists.length > 0) {
+      result = await playlists.map(async (playlist) => {
+        let totalDuration = 0;
+        if (playlist.songs && playlist.songs.length > 0) {
+          await playlist.songs.map((song) => {
+            totalDuration += song.duration;
+          });
+        }
+
+        const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);
+
+        return {
+          playlist_name: playlist.name,
+          songs: playlist.songs,
+          total_duration: total_duration,
+          start_at: currentDateFormat,
+          end_at: finished_at,
+        };
+      });
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
     throw new ApolloError('INTERNAL SERVER ERROR');
   }
 };

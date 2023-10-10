@@ -24,6 +24,13 @@ exports.typeDefs = gql`
     token: String
     user: User
   }
+  type PlaylistResponse {
+    playlist_name: String!
+    songs: [Song]!
+    start_at: String
+    end_at: String
+    total_duration: String
+  }
 
   input InputLogin {
     username: String!
@@ -63,6 +70,12 @@ exports.typeDefs = gql`
     getAllPlaylist: [Playlist]!
     getPlaylist(playlist_id: String!): Playlist!
     getPlaylistRandom(maxSecond: Int!): [Song]!
+
+    getAllPlaylistWithDuration: [PlaylistResponse]
+    getOnePlaylistWithDuration(playlist_id: String!): PlaylistResponse
+    getPlaylistsByArtistWithDuration: [PlaylistResponse]
+    getPlaylistsByGenreWithDuration: [PlaylistResponse]
+    getPlaylistRandomWithDuration(maxSecond: Int): PlaylistResponse
   }
 
   type Mutation {

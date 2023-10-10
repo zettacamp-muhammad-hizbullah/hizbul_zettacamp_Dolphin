@@ -71,125 +71,6 @@ exports.retriveAllPlaylist = async () => {
   return result;
 };
 
-exports.retriveBookShelvesAggregate = async () => {
-  let result = [];
-  try {
-    result = await Model.playlist.aggregate([
-      {
-        $project: {
-          embedded_books: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          __v: 0,
-        },
-      },
-      // {
-      //   $unwind: '$books',
-      // },
-      {
-        $lookup: {
-          from: 'books',
-          localField: 'books',
-          foreignField: '_id',
-          as: 'books_data',
-        },
-      },
-    ]);
-  } catch (error) {
-    throw new Error(error);
-  }
-
-  return result;
-};
-
-exports.retriveBookShelvesGenreDistinct = async () => {
-  let result = [];
-  try {
-    result = await Model.playlist
-      .find()
-      .populate('books')
-      .exec(function (err, bookShelf) {});
-
-    // result = await Model.playlist.find().populate('books').distinct('books.genre');
-    // result = await Model.playlist
-    //   .find({}, function(err, result) {
-    //     console.log(result);
-    //   })
-    // .distinct('books', function(err, book) {
-
-    //   console.log(book);
-    // });
-  } catch (error) {
-    throw new Error(error);
-  }
-
-  return result;
-};
-
-exports.retriveBookShelvesGenreDistinctEmbedded = async () => {
-  let result = [];
-  try {
-    result = await Model.playlist.find().distinct('embedded_books.genre');
-  } catch (error) {
-    throw new Error(error);
-  }
-
-  return result;
-};
-
-exports.retriveBookShelvesElemMatch = async (value) => {
-  let result = [];
-  try {
-    result = await Model.playlist
-      .find()
-      .select(['-embedded_books'])
-      .populate({
-        path: 'books',
-        match: {
-          genre: {
-            $elemMatch: {
-              $eq: value,
-            },
-          },
-        },
-      });
-
-    // result = await Model.playlist
-    //   .find({
-    //     books: {
-    //       $elemMatch: {
-    //         $in: value,
-    //       },
-    //     },
-    //   })
-    //   .populate('books');
-  } catch (error) {
-    throw new Error(error);
-  }
-
-  return result;
-};
-
-exports.retriveBookShelvesElemMatchEmbedded = async (value) => {
-  let result = [];
-  try {
-    result = await Model.playlist
-      .find({
-        embedded_books: {
-          $elemMatch: {
-            genre: 'story',
-            price: 143000,
-          },
-        },
-      })
-      .select(['-books']);
-  } catch (error) {
-    throw new Error(error);
-  }
-
-  return result;
-};
-
 exports.retrivePlaylistById = async (playlistId) => {
   let result = null;
   try {
@@ -341,6 +222,77 @@ exports.deletePlaylistById = async (playlistId) => {
     if (!result) {
       throw new Error('no data to delete');
     }
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.groupSongByGenre = async () => {
+  let result = null;
+  try {
+    result = await Model.song.aggregate([
+      {
+        $unwind: '$genre',
+      },
+      {
+        $group: {
+          _id: '$genre',
+          songs: {
+            $push: {
+              _id: "$_id",
+              title: "$title",
+              genre: ["$genre"],
+              artist: "$artist",
+              duration: "$duration",
+            },            
+          },
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.groupSongByArtist = async () => {
+  let result = null;
+  try {
+    result = await Model.song.aggregate([
+      {
+        $group: {
+          _id: '$artist',
+          songs: {
+            $push: '$$ROOT',
+          },
+        },
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retrivePlaylistByIdWithSongs = async (playlistId) => {
+  let result = null;
+  try {
+    result = await Model.playlist.findOne({ _id: playlistId }).populate('songs');
+  } catch (error) {
+    throw new Error(error);
+  }
+
+  return result;
+};
+
+exports.retriveAllPlaylistSongs = async () => {
+  let result = null;
+  try {
+    result = await Model.playlist.find().populate('songs');
   } catch (error) {
     throw new Error(error);
   }
