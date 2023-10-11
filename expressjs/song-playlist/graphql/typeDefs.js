@@ -31,6 +31,25 @@ exports.typeDefs = gql`
     end_at: String
     total_duration: String
   }
+  type SongWebhookResponse {
+    song_name: String
+    duration: String
+    artist: String
+    genre: String
+    album: String
+  }
+  type PlaylistWebhookResponse {
+    playlist_name: String
+    description: String
+    creator: String
+    total_favorite: String
+    song_list: [SongWebhookResponse]
+  }
+  type WebhookResponse {
+    message: String
+    status: String
+    data: [PlaylistWebhookResponse]
+  }
 
   input InputLogin {
     username: String!
@@ -56,6 +75,20 @@ exports.typeDefs = gql`
   input InputSongs {
     songs: [String]!
   }
+  input InputSongWebhook {
+    song_name: String
+    duration: String
+    artist: String
+    genre: String
+    album: String
+  }
+  input InputPlaylistWebhook {
+    playlist_name: String
+    description: String
+    creator: String
+    total_favorite: String
+    song_list: [InputSongWebhook]
+  }
 
   type Query {
     me: User!
@@ -79,6 +112,9 @@ exports.typeDefs = gql`
   }
 
   type Mutation {
+    createPlaylistWebhook(input: InputPlaylistWebhook): WebhookResponse
+    createMultiplePlaylistWebhook(input: [InputPlaylistWebhook]): WebhookResponse
+
     login(input: InputLogin): LoginResponse
     register(input: InputRegister): User
 

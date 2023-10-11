@@ -1,6 +1,7 @@
 const authController = require('../controllers/auth.controller');
 const songController = require('../controllers/song.controller');
 const playlistController = require('../controllers/playlist.controller');
+const webhookController = require('../controllers/webhook.controller');
 const userController = require('../controllers/user.controller');
 
 const playlist = async (song, {}, ctx) => {
@@ -37,6 +38,9 @@ module.exports = {
     deletePlaylistById: playlistController.deletePlaylistById,
     addSongToPlaylist: playlistController.addSongsToPlaylistById,
     removeSongFromPlaylist: playlistController.removeSongFromPlaylistById,
+
+    createPlaylistWebhook: webhookController.storePlaylistWebhook,
+    createMultiplePlaylistWebhook: webhookController.storePlaylistWebhook
   },
   Query: {
     // AUTH
@@ -60,7 +64,7 @@ module.exports = {
     getOnePlaylistWithDuration: playlistController.getOnePlaylistWithDuration,
     getPlaylistsByArtistWithDuration: playlistController.getPlaylistsByArtistWithDuration,
     getPlaylistsByGenreWithDuration: playlistController.getPlaylistsByGenreWithDuration,
-    getPlaylistRandomWithDuration: playlistController.getPlaylistRandomWithDuration,
+    getPlaylistRandomWithDuration: playlistController.getPlaylistRandomWithDuration,    
   },
 
   Song: {
