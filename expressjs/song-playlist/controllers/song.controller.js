@@ -1,9 +1,9 @@
 const { ApolloError } = require('apollo-server-express');
 const songService = require('../services/song.service');
-const authMiddleware = require('../middlewares/auth.middleware');
+const { graphQlAuthMiddleware } = require('../middlewares/auth.middleware');
 
 exports.storeSong = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const reqBody = args?.input;
 
@@ -22,7 +22,7 @@ exports.storeSong = async (parent, args, ctx, info) => {
 };
 
 exports.getSongs = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     let perPage = args?.perPage || 10;
     let page = args?.page || 1;
@@ -42,7 +42,7 @@ exports.getSongs = async (parent, args, ctx, info) => {
 };
 
 exports.getAllSong = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const result = await songService.retriveAllSong();
     // const result = await ctx.loaders.songLoader.loadMany()
@@ -53,7 +53,7 @@ exports.getAllSong = async (parent, args, ctx, info) => {
 };
 
 exports.getSongById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const songId = args?.song_id;
     console.log(ctx.loaders);
@@ -66,7 +66,7 @@ exports.getSongById = async (parent, args, ctx, info) => {
 };
 
 exports.updateSongById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const reqBody = args?.input;
     const songId = args?.song_id;
@@ -89,7 +89,7 @@ exports.updateSongById = async (parent, args, ctx, info) => {
 };
 
 exports.deleteSongById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const songId = args?.song_id;
     const result = await songService.deleteSongById(songId);

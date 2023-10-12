@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const { registerUser, authenticatedUser, loginUser } = require('../services/auth.service');
 const { SALT_ROUND } = require('../config/app.config');
 const { ApolloError } = require('apollo-server-express');
-const authMiddleware = require('../middlewares/auth.middleware');
+const { graphQlAuthMiddleware } = require('../middlewares/auth.middleware');
 
 exports.login = async (parent, args, ctx, info) => {
   const reqBody = args?.input;
@@ -45,7 +45,7 @@ exports.register = async (parent, args, ctx, info) => {
 };
 
 exports.me = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const { username } = ctx?.user;
     console.log('username', username);

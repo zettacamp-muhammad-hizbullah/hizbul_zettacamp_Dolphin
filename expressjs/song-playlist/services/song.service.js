@@ -167,11 +167,10 @@ exports.updateSong = async (songId, payload, options) => {
       runValidators: true,
       ...options,
     });
+    return result;
   } catch (error) {
-    throw new ApolloError(error);
+    throw new ApolloError(error);    
   }
-
-  return result;
 };
 
 exports.deleteSongById = async (songId) => {

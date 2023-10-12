@@ -1,5 +1,5 @@
 const moment = require('moment/moment');
-const authMiddleware = require('../middlewares/auth.middleware');
+const { graphQlAuthMiddleware } = require('../middlewares/auth.middleware');
 const playlistService = require('../services/playlist.service');
 const songService = require('../services/song.service');
 const { ApolloError } = require('apollo-server-express');
@@ -8,7 +8,7 @@ const { generateDurationDateTime } = require('../utils/index.util');
 const formatDateTime = 'dddd, DD MMMM YYYY HH:mm:ss';
 
 exports.storePlaylist = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const reqBody = args?.input;
 
@@ -36,7 +36,7 @@ exports.getPlaylistsRandom = async (parent, args, ctx, info) => {
 };
 
 exports.getPlaylists = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     let name = args?.search || null;
     let perPage = args?.perPage || 10;
@@ -57,7 +57,7 @@ exports.getPlaylists = async (parent, args, ctx, info) => {
 };
 
 exports.getAllPlaylist = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const result = await playlistService.retriveAllPlaylist();
     return result;
@@ -67,7 +67,7 @@ exports.getAllPlaylist = async (parent, args, ctx, info) => {
 };
 
 exports.getPlaylistById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const playlistId = args?.playlist_id;
     // const result = await playlistService.retrivePlaylistById(playlistId);
@@ -79,7 +79,7 @@ exports.getPlaylistById = async (parent, args, ctx, info) => {
 };
 
 exports.updatePlaylistById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const reqBody = args?.input;
     const playlistId = args?.playlist_id;
@@ -97,7 +97,7 @@ exports.updatePlaylistById = async (parent, args, ctx, info) => {
 };
 
 exports.addSongsToPlaylistById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const reqBody = args?.input;
     const playlistId = args?.playlist_id;
@@ -133,7 +133,7 @@ exports.addSongsToPlaylistById = async (parent, args, ctx, info) => {
 };
 
 exports.removeSongFromPlaylistById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const playlistId = args?.playlist_id;
     const songId = args?.song_id;
@@ -146,7 +146,7 @@ exports.removeSongFromPlaylistById = async (parent, args, ctx, info) => {
 };
 
 exports.deletePlaylistById = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const playlistId = args?.playlist_id;
     const result = await playlistService.deletePlaylistById(playlistId);
@@ -204,7 +204,7 @@ exports.getPlaylistsByGenreWithDuration = async (parent, args, ctx, info) => {
         }
         // console.log("totalDuration", totalDuration);
 
-        const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);        
+        const { total_duration, finished_at } = await generateDurationDateTime(finishedDate, totalDuration, formatDateTime);
 
         result.push({
           playlist_name: songs[i]._id,

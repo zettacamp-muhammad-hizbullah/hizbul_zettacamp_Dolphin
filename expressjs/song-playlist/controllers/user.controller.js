@@ -1,9 +1,9 @@
 const { ApolloError } = require('apollo-server-express');
 const userService = require('../services/user.service');
-const authMiddleware = require('../middlewares/auth.middleware');
+const { graphQlAuthMiddleware } = require('../middlewares/auth.middleware');
 
 exports.getUsers = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     let perPage = args?.perPage || 10;
     let page = args?.page || 1;
@@ -23,7 +23,7 @@ exports.getUsers = async (parent, args, ctx, info) => {
 };
 
 exports.getAllUser = async (parent, args, ctx, info) => {
-  authMiddleware(parent, args, ctx, info);
+  graphQlAuthMiddleware(parent, args, ctx, info);
   try {
     const result = await userService.getAllUser();
     // const result = await ctx.loaders.songLoader.loadMany()
@@ -32,4 +32,3 @@ exports.getAllUser = async (parent, args, ctx, info) => {
     throw new ApolloError('INTERNAL_SERVER_ERROR');
   }
 };
-
