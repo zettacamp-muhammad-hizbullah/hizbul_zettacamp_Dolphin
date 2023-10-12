@@ -36,6 +36,8 @@ exports.updateSongWebhook = async (req, res) => {
       body: JSON.stringify(reqBody),
       headers: {
         Authorizations: req.headers.authorization,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
     });
 
