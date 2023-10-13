@@ -9,6 +9,7 @@ const { userLoader } = require('./graphql/loaders/user.loader');
 const { applyMiddleware } = require('graphql-middleware');
 const webhookController = require('./controllers/webhook.controller');
 const { restAuthMiddleware } = require('./middlewares/auth.middleware');
+const runCronJob = require('./cron/index.cron');
 
 const app = express();
 const port = 4000;
@@ -39,3 +40,5 @@ app.post('/update-song', restAuthMiddleware, webhookController.updateSongWebhook
 app.listen(port, () => {
   console.log(`Running on port ${port}`);
 });
+
+runCronJob();

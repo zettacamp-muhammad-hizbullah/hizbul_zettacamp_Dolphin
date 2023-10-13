@@ -32,6 +32,7 @@ module.exports = {
     updateSongById: songController.updateSongById,
     createSong: songController.storeSong,
     deleteSongById: songController.deleteSongById,
+    resetIsPlayedStatusAllSong: songController.resetIsPlayedStatusAllSong,
 
     updatePlaylistById: playlistController.updatePlaylistById,
     createPlaylist: playlistController.storePlaylist,

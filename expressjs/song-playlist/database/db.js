@@ -15,7 +15,7 @@ const db_connect = () => {
     .catch((err) => {
       console.error(err);
     });
-  mongoose.set('debug', true);
+  // mongoose.set('debug', true);
 };
 
 exports.DB = {

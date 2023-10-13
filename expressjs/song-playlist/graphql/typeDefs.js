@@ -121,6 +121,7 @@ exports.typeDefs = gql`
     updateSongById(song_id: String!, input: SongRequest!): Song
     createSong(input: SongRequest!): Song
     deleteSongById(song_id: String!): Song
+    resetIsPlayedStatusAllSong: Boolean
 
     updatePlaylistById(playlist_id: String!, input: PlaylistRequest!): Playlist
     createPlaylist(input: PlaylistRequest!): Playlist

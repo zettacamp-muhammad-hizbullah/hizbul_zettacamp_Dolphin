@@ -98,3 +98,13 @@ exports.deleteSongById = async (parent, args, ctx, info) => {
     throw new ApolloError('INTERNAL SERVER ERROR');
   }
 };
+
+exports.resetIsPlayedStatusAllSong = async (parent, args, ctx, info) => {
+  try {
+    // await songService.playSong();
+    const result = await songService.resetStatusPlayAllSong();
+    return true;
+  } catch (error) {
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+};

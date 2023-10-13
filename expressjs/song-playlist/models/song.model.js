@@ -17,6 +17,10 @@ module.exports = (mongoose) => {
         ref: 'Playlist',
         default: null,
       },
+      is_played: {
+        type: Boolean,
+        default: false,
+      },
     },
     {
       timestamps: true,

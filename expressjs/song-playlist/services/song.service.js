@@ -1,5 +1,6 @@
 const { ApolloError } = require('apollo-server-express');
 const Model = require('../models/index.model');
+const moment = require('moment');
 
 exports.createOneSong = async (payload) => {
   let result = null;
@@ -169,7 +170,22 @@ exports.updateSong = async (songId, payload, options) => {
     });
     return result;
   } catch (error) {
-    throw new ApolloError(error);    
+    throw new ApolloError(error);
+  }
+};
+
+exports.resetStatusPlayAllSong = async () => {
+  let result = null;
+  try {
+    result = await Model.song.updateMany(
+      {},
+      {
+        is_played: false,
+      }
+    );
+    return result;
+  } catch (error) {
+    throw new ApolloError(error);
   }
 };
 
@@ -186,4 +202,35 @@ exports.deleteSongById = async (songId) => {
   }
 
   return result;
+};
+
+exports.playSong = async () => {
+  let result = null;
+  try {
+    console.log('run at', moment().toISOString());
+    result = await Model.song.findOneAndUpdate(
+      {
+        is_played: {
+          $ne: true,
+        },
+      },
+      {
+        is_played: true,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (result) {
+      console.log('playing song => ', result);
+      console.table([{ title: result.title, artist: result.artist, duration: result.duration, played_at: result.updatedAt }]);
+      return result;
+    } else {
+      console.log('All song already played');
+      return null;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
 };
