@@ -208,19 +208,21 @@ exports.playSong = async () => {
   let result = null;
   try {
     console.log('run at', moment().toISOString());
-    result = await Model.song.findOneAndUpdate(
-      {
-        is_played: {
-          $ne: true,
+    result = await Model.song
+      .findOneAndUpdate(
+        {
+          is_played: {
+            $ne: true,
+          },
         },
-      },
-      {
-        is_played: true,
-      },
-      {
-        new: true,
-      }
-    );
+        {
+          is_played: true,
+        },
+        {
+          new: true,
+        }
+      )
+      .sort({ title: 1 });
 
     if (result) {
       console.log('playing song => ', result);

@@ -1,6 +1,7 @@
 const { ApolloError } = require('apollo-server-express');
 const songService = require('../services/song.service');
 const { graphQlAuthMiddleware } = require('../middlewares/auth.middleware');
+const { playSongCron } = require('../cron/run-song.cron');
 
 exports.storeSong = async (parent, args, ctx, info) => {
   graphQlAuthMiddleware(parent, args, ctx, info);
@@ -108,3 +109,18 @@ exports.resetIsPlayedStatusAllSong = async (parent, args, ctx, info) => {
     throw new ApolloError('INTERNAL SERVER ERROR');
   }
 };
+
+exports.playSongTriggerManual = async (parent, args, ctx, info) => {
+  try {
+    const cronName = args.cron_name || null
+    if (cronName === 'play_song') {
+      songService.playSong()
+      // playSongCron.fireOnTick()
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    throw new ApolloError('INTERNAL SERVER ERROR');
+  }
+}

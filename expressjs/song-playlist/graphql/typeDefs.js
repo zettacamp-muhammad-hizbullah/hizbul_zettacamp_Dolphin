@@ -128,6 +128,7 @@ exports.typeDefs = gql`
     deletePlaylistById(playlist_id: String!): Playlist
     addSongToPlaylist(playlist_id: String!, input: InputSongs): Playlist
     removeSongFromPlaylist(playlist_id: String!, song_id: String!): Playlist
+    triggerPlaySongManual(cron_name: String!): Boolean
   }
 `;
 

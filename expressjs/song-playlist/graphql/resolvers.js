@@ -41,7 +41,8 @@ module.exports = {
     removeSongFromPlaylist: playlistController.removeSongFromPlaylistById,
 
     createPlaylistWebhook: webhookController.storePlaylistWebhook,
-    createMultiplePlaylistWebhook: webhookController.storePlaylistWebhook
+    createMultiplePlaylistWebhook: webhookController.storePlaylistWebhook,
+    triggerPlaySongManual: songController.playSongTriggerManual
   },
   Query: {
     // AUTH
